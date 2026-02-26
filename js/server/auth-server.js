@@ -10,6 +10,9 @@ import {
     getRecords
 } from '../db/db-api.js';
 
+import { dataServer } from './data-server.js';
+
+
 const DB_USERS = 'db_users';
 
 // ===================== Private Helper Functions =====================
@@ -83,36 +86,32 @@ function handleRegister(data) {
 function handleLogin(data) {
     const { username, password } = data;
 
-    // Validate required fields
     if (!username || !password) {
-        return {
-            status: 400,
-            message: 'Missing required fields: username, password'
-        };
+        return { status: 400, message: 'Missing required fields' };
     }
 
-    // Find user by username and password
     const matchingUsers = getRecords(DB_USERS, user =>
         user.username === username && user.password === password
     );
 
     if (matchingUsers.length === 0) {
-        return {
-            status: 401,
-            message: 'Invalid username or password'
-        };
+        return { status: 401, message: 'Invalid username or password' };
     }
 
     const user = matchingUsers[0];
     const sessionToken = generateSessionToken();
 
+    dataServer.storeSession(sessionToken, user.id);
+
     return {
         status: 200,
         message: 'Login successful',
         data: {
-            id: user.id,
-            username: user.username,
-            fullName: user.fullName,
+            user: {
+                id: user.id,
+                username: user.username,
+                fullName: user.fullName
+            },
             sessionToken
         }
     };
