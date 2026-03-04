@@ -1,0 +1,25 @@
+/* ===================================================
+   MeetSync — Responsive Breakpoints
+   Mobile-first overrides for narrow viewports.
+   =================================================== */
+
+@media (max-width: 768px) {
+  /* Collapse sidebar entirely */
+  :root { --sidebar-width: 0px; }
+  .sidebar   { display: none; }
+  .main-area { margin-left: 0; }
+
+  /* Stats row: keep 3 columns but tighter */
+  .stats-row  { grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 16px 0; }
+  .stat-number { font-size: 22px; }
+
+  /* Reduce page padding */
+  .main-header  { padding: 20px 16px 0; }
+  .content-area { padding: 16px 16px 24px; }
+
+  /* Panel takes full width */
+  .slide-panel { width: 100vw; }
+
+  /* Single-column meeting cards */
+  .meetings-grid { grid-template-columns: 1fr; }
+}

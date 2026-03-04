@@ -1,0 +1,78 @@
+/* ===================================================
+   MeetSync — Main Dashboard Area
+   Covers: main-area wrapper, page header greeting,
+           date line, stats row + cards, content area.
+   =================================================== */
+
+/* ── Main area (offset from fixed sidebar) ── */
+.main-area {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+/* ── Page header ── */
+.main-header { padding: 32px 36px 0; }
+
+.greeting-text {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.8px;
+  margin-bottom: 3px;
+}
+.date-text { font-size: 13px; color: var(--text-secondary); }
+
+/* ── Stats row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  padding: 20px 36px 0;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.stat-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+  width: 42px; height: 42px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.stat-card:hover .stat-icon { transform: scale(1.1) rotate(-5deg); }
+.stat-icon.total    { background: var(--primary-light); }
+.stat-icon.today    { background: var(--today-light); }
+.stat-icon.upcoming { background: var(--success-light); }
+
+.stat-info { flex: 1; min-width: 0; }
+.stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -1.5px;
+  margin-bottom: 3px;
+}
+.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+/* ── Content area (below stats, holds meetings / invitations) ── */
+.content-area { padding: 22px 36px 40px; flex: 1; }

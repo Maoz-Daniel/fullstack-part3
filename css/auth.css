@@ -1,0 +1,92 @@
+/* ===================================================
+   MeetSync — Auth Pages (Login & Register)
+   =================================================== */
+
+/* ── Page shell: always centered ── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ── Subtle atmospheric orbs (background depth only) ── */
+.auth-page::before,
+.auth-page::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.auth-page::before {
+  width: 750px; height: 750px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 62%);
+  top: -250px; left: -220px;
+  animation: orbFloat 12s ease-in-out infinite;
+}
+.auth-page::after {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 62%);
+  bottom: -180px; right: -180px;
+  animation: orbFloat 12s ease-in-out infinite reverse;
+  animation-delay: -6s;
+}
+@keyframes orbFloat {
+  0%,100% { transform: translate(0, 0) scale(1); }
+  33%     { transform: translate(45px, -35px) scale(1.08); }
+  66%     { transform: translate(-28px, 40px) scale(0.94); }
+}
+
+/* ── Auth card (static border, always centered) ── */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-2xl);
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Logo ── */
+.auth-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+.auth-logo-img {
+  width: 160px;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* ── Typography ── */
+.auth-heading {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.8px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+.auth-subheading {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+
+/* ── Sign-up / sign-in link row ── */
+.auth-link-row {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.auth-link-row a { color: var(--primary); text-decoration: none; font-weight: 600; }
+.auth-link-row a:hover { text-decoration: underline; }
