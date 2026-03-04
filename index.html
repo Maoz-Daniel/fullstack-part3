@@ -242,6 +242,11 @@
             <!-- ── Invitations Section (hidden by default) ── -->
             <div id="invitations-section" style="display:none"></div>
 
+            <!-- Empty State Container -->
+            <div id="empty-state-container" class="meetings-empty" style="display: none;">
+              <div class="meetings-empty-text">No meetings found</div>
+              <div class="meetings-empty-sub">Click "New Meeting" to schedule one</div>
+            </div>
           </div>
         </div>
 
@@ -320,6 +325,58 @@
           <div id="modal-body"></div>
         </div>
       </div>
+
+      <!-- ── Meeting Detail Modal Template ── -->
+      <template id="detail-modal-template">
+        <div>
+          <span class="meeting-status-badge" id="status-badge"></span>
+          <span class="meeting-status-badge badge-invited" id="invited-badge" style="display: none;">Invited</span>
+          <hr class="modal-divider">
+          <div class="modal-section">
+            <div class="modal-label">Date &amp; Time</div>
+            <div class="modal-value" id="date-time"></div>
+          </div>
+          <div class="modal-section">
+            <div class="modal-label">Location</div>
+            <div class="modal-value" id="location"></div>
+          </div>
+          <div class="modal-section" id="description-section">
+            <div class="modal-label">Description</div>
+            <div class="modal-value" id="description"></div>
+          </div>
+          <div class="modal-section" id="participants-section">
+            <div class="modal-label">Participants</div>
+            <div class="modal-value" id="participants-container" style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;"></div>
+          </div>
+          <hr class="modal-divider">
+          <div class="modal-section">
+            <div class="modal-label">Created</div>
+            <div class="modal-value" id="created-at"></div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ── Invitation Card Template ── -->
+      <template id="invite-card-template">
+        <div class="invite-card">
+          <div class="invite-card-header">
+            <div class="invite-from">
+              <img src="" class="invite-avatar" alt="">
+              <div>
+                <div class="invite-from-name"></div>
+                <div class="invite-from-label">invited you to</div>
+              </div>
+            </div>
+            <span class="meeting-status-badge"></span>
+          </div>
+          <div class="invite-meeting-title"></div>
+          <div class="invite-meeting-meta"></div>
+          <div class="invite-actions" style="display: none;">
+            <button class="btn-invite-accept">Accept</button>
+            <button class="btn-invite-decline">Decline</button>
+          </div>
+        </div>
+      </template>
 
     </div>
   </template>

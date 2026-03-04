@@ -15,27 +15,27 @@ const defaultRoute = '#/login';
  * @param {Function} onPageLoadCallback - Callback to execute after rendering the page.
  */
 function renderPage(onPageLoadCallback) {
-  const hash = window.location.hash || defaultRoute;
-  const templateId = routes[hash] || routes[defaultRoute];
+  const hash = window.location.hash || defaultRoute; // get the current hash or default to the login page 
+  const templateId = routes[hash] || routes[defaultRoute]; 
 
-  const appContainer = document.getElementById('app-container');
+  const appContainer = document.getElementById('app-container'); //the main container where we will render our pages
   if (!appContainer) {
     console.error('App container not found');
     return;
   }
 
-  const template = document.getElementById(templateId);
+  const template = document.getElementById(templateId); //get the template element based on the route
   if (!template) {
     console.error(`Template with ID '${templateId}' not found`);
     return;
   }
 
-  // Clear the app container and append the new content
+  // clear the app container and append the new content
   appContainer.innerHTML = '';
   const content = document.importNode(template.content, true); 
   appContainer.appendChild(content);
 
-  // Notify the main app controller
+  // notify the main app controller
   onPageLoadCallback(hash);
 }
 
@@ -48,7 +48,7 @@ export function initRouter(onPageLoadCallback) {
     throw new Error('onPageLoadCallback must be a function');
   }
 
-  // Listen to hash changes and initial page load
+  // listen to hash changes and initial page load
   window.addEventListener('hashchange', () => renderPage(onPageLoadCallback));
   window.addEventListener('load', () => renderPage(onPageLoadCallback));
 }

@@ -122,13 +122,14 @@ function setupLoginView() {
   if (!loginForm) return;
 
   loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    e.preventDefault(); // prevent form from submitting normally
 
     const email    = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
     let valid = true;
 
+    // basic validation
     if (!isValidEmail(email)) {
       showFieldError('email-group', 'email-error', true);
       valid = false;
@@ -147,25 +148,27 @@ function setupLoginView() {
 
     setAuthError('auth-error', '');
     const submitBtn = loginForm.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
+    submitBtn.disabled = true; // disable button to prevent multiple clicks and race conditions
     submitBtn.innerHTML = '<span class="spinner"></span> Signing in…';
 
+
+    // ========== AJAX login request ==========
     const xhr = new FXMLHttpRequest();
     xhr.open('POST', '/auth/login');
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.onreadystatechange = () => {
+    xhr.onreadystatechange = () => { // readyState 4 means the request is done (either success or failure)
       if (xhr.readyState !== 4) return;
 
-      submitBtn.disabled = false;
+      submitBtn.disabled = false; // re-enable the button
       submitBtn.textContent = 'Sign In';
 
-      if (xhr.status === 0) {
+      if (xhr.status === 0) { // status 0  means network error 
         setAuthError('auth-error', 'Network error — request timed out. Please try again.');
         return;
       }
 
-      if (xhr.status === 200) {
+      if (xhr.status === 200) { // status 200 means success — the server should return a session token and user info
         const data = JSON.parse(xhr.responseText).data;
         sessionToken = data.sessionToken;
         currentUser  = data.user;
@@ -184,7 +187,7 @@ function setupLoginView() {
 // ===================== Register View =====================
 
 function setupRegisterView() {
-  const registerForm = document.getElementById('register-form');
+  const registerForm = document.getElementById('register-form'); 
   if (!registerForm) return;
 
   registerForm.addEventListener('submit', (e) => {
@@ -196,6 +199,7 @@ function setupRegisterView() {
 
     let valid = true;
 
+    // basic validation
     if (!name) {
       showFieldError('name-group', 'name-error', true);
       valid = false;
@@ -221,9 +225,10 @@ function setupRegisterView() {
 
     setAuthError('auth-error', '');
     const submitBtn = registerForm.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
+    submitBtn.disabled = true; // disable button to prevent multiple clicks and race conditions
     submitBtn.innerHTML = '<span class="spinner"></span> Creating account…';
 
+    // ========== AJAX register request ==========
     const xhr = new FXMLHttpRequest();
     xhr.open('POST', '/auth/register');
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -239,15 +244,16 @@ function setupRegisterView() {
       }
 
       if (xhr.status === 201) {
-        // The server returns a session token directly — no second login request needed.
-        // This is the auto-login fix: the register response now includes sessionToken
+        // the server returns a session token directly — no second login request needed.
+        // this is the auto-login fix: the register response now includes sessionToken
         // so the client can navigate straight to #/meetings without another round-trip.
+        //201 and not 200 beacause a new resource (user) was created
         const data = JSON.parse(xhr.responseText).data;
         sessionToken = data.sessionToken;
         currentUser  = data.user;
         showToast('Welcome to MeetSync!', 'success');
         navigateTo('#/meetings');
-      } else if (xhr.status === 409) {
+      } else if (xhr.status === 409) { // 409 Conflict means the email is already registered
         submitBtn.disabled = false;
         submitBtn.textContent = 'Create Account';
         setAuthError('auth-error', 'An account with this email already exists.');
@@ -288,6 +294,11 @@ function getMeetingStatus(dateStr) {
   return 'past';
 }
 
+/**
+ * animates a number counting up to a target value.
+ * @param {string} id - The ID of the element whose textContent will be updated.
+ * @param {number} target - The final number to count up to.
+ */
 function animateCounter(id, target) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -315,7 +326,7 @@ function updateStats(meetings) {
 // ===================== View / Filter Switching =====================
 
 /**
- * Switches the visible content section and updates sidebar active states.
+ * switches the visible content section and updates sidebar active states.
  * @param {'meetings'|'invitations'} view
  */
 function setActiveView(view) {
@@ -339,13 +350,13 @@ function setActiveView(view) {
     if (navMeetings)     navMeetings.classList.remove('active');
     if (navInvitations)  navInvitations.classList.add('active');
     if (filterSection)   filterSection.style.display = 'none';
-    // Load invitations every time the user opens the section
+    // load invitations every time the user opens the section
     loadInvitations();
   }
 }
 
 /**
- * Applies a client-side filter to the meetings grid.
+ * applies a client-side filter to the meetings grid.
  * @param {'all'|'today'|'upcoming'} filter
  */
 function applyFilter(filter) {
@@ -365,11 +376,11 @@ function applyFilter(filter) {
 }
 
 function setupMeetingsView() {
-  // Reset view state
+  // reset view state
   currentActiveView = 'meetings';
   activeFilter      = 'all';
 
-  // Greeting + date
+  // greeting + date
   const greetingEl = document.getElementById('greeting-text');
   if (greetingEl) greetingEl.textContent = getGreeting();
 
@@ -380,7 +391,7 @@ function setupMeetingsView() {
     });
   }
 
-  // Sidebar user info + DiceBear avatar
+  // sidebar user info + DiceBear avatar
   if (currentUser) {
     setAvatar(document.getElementById('sidebar-avatar-img'), currentUser.username);
 
@@ -390,7 +401,7 @@ function setupMeetingsView() {
     if (sidebarEmail)    sidebarEmail.textContent = currentUser.username;
   }
 
-  // Logout
+  // logout
   const logoutBtn = document.getElementById('logout-button');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -402,13 +413,13 @@ function setupMeetingsView() {
     });
   }
 
-  // Sidebar navigation
+  // sidebar navigation
   const navMeetings    = document.getElementById('nav-meetings');
   const navInvitations = document.getElementById('nav-invitations');
   if (navMeetings)    navMeetings.addEventListener('click',    () => setActiveView('meetings'));
   if (navInvitations) navInvitations.addEventListener('click', () => setActiveView('invitations'));
 
-  // Sidebar filter items
+  // sidebar filter items
   const filterAll      = document.getElementById('filter-all');
   const filterToday    = document.getElementById('filter-today');
   const filterUpcoming = document.getElementById('filter-upcoming');
@@ -416,13 +427,13 @@ function setupMeetingsView() {
   if (filterToday)    filterToday.addEventListener('click',    () => applyFilter('today'));
   if (filterUpcoming) filterUpcoming.addEventListener('click', () => applyFilter('upcoming'));
 
-  // Search
+  // search
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     searchInput.addEventListener('input', () => {
       const query = searchInput.value.toLowerCase().trim();
       if (!query) {
-        renderMeetingsList(allMeetings, false);
+        renderMeetingsList(allMeetings, false); // if search is cleared, show the full list again
         return;
       }
       const filtered = allMeetings.filter(m =>
@@ -431,22 +442,22 @@ function setupMeetingsView() {
         (m.date        && m.date.includes(query))                      ||
         (m.description && m.description.toLowerCase().includes(query))
       );
-      renderMeetingsList(filtered, false);
+      renderMeetingsList(filtered, false); // render the filtered list without re-applying the date filter (the search should override the date filter)
     });
   }
 
-  // New meeting button
+  // new meeting button
   const openAddBtn = document.getElementById('open-add-panel');
   if (openAddBtn) openAddBtn.addEventListener('click', () => openPanel());
 
-  setupPanel();
-  setupDetailModal();
+  setupPanel(); // sets up the add/edit meeting slide panel (event listeners, form handling)
+  setupDetailModal(); // sets up the meeting details modal (event listeners, dynamic content population)
   prefetchUsers(); // pre-load user list so participant names resolve on cards
-  fetchMeetings();
-  fetchInvitationBadge(); // Load pending invite count for sidebar badge
+  fetchMeetings(); // load the relevant meetings for the user and render them
+  fetchInvitationBadge(); // load pending invite count for sidebar badge
 }
 
-// ===================== Slide Panel (Add / Edit) =====================
+// ===================== slide panel (add / edit) =====================
 
 function openPanel(meeting = null) {
   const panel       = document.getElementById('meeting-panel');
@@ -475,7 +486,7 @@ function openPanel(meeting = null) {
   panel.classList.add('open');
   overlay.classList.add('visible');
 
-  // Load participant picker (async — populates while panel is sliding in)
+  // load participant picker (async — populates while panel is sliding in)
   const preSelected = meeting?.participants || [];
   loadParticipantPicker(preSelected);
 }
@@ -533,7 +544,7 @@ function handlePanelSubmit() {
     if (!val) {
       if (input) input.style.borderColor = 'var(--danger)';
       if (error) error.classList.add('visible');
-      valid = false;
+      valid = false; // if any field is invalid, the whole form is invalid. avoid race conditions 
     } else {
       if (input) input.style.borderColor = '';
       if (error) error.classList.remove('visible');
@@ -546,21 +557,21 @@ function handlePanelSubmit() {
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<span class="spinner"></span> Saving…';
 
-  const payload = {
+  const payload = { 
     title: titleVal, date: dateVal, time: timeVal,
     location: locationVal, description: descriptionVal,
     participants: participantIds
   };
 
   if (editId) {
-    // ── PUT ──────────────────────────────────────────────────────────────
+    // ── PUT ──
     const xhr = new FXMLHttpRequest();
     xhr.open('PUT', `/api/meetings/${editId}`);
     xhr.setRequestHeader('sessionToken', sessionToken);
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState !== 4) return;
-      submitBtn.disabled = false;
+      submitBtn.disabled = false; // re-enable the button regardless of success or failure to allow retrying
       submitBtn.textContent = 'Save Changes';
 
       if (xhr.status === 0) {
@@ -582,21 +593,21 @@ function handlePanelSubmit() {
     xhr.send(payload);
 
   } else {
-    // ── POST ─────────────────────────────────────────────────────────────
+    // ── POST ──
     const xhr = new FXMLHttpRequest();
     xhr.open('POST', '/api/meetings');
     xhr.setRequestHeader('sessionToken', sessionToken);
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState !== 4) return;
-      submitBtn.disabled = false;
+      submitBtn.disabled = false; // re-enable the button regardless of success or failure to allow retrying
       submitBtn.textContent = 'Save Meeting';
 
       if (xhr.status === 0) {
         showToast('Network error — request timed out. Please try again.', 'error');
         return;
       }
-      if (xhr.status === 201) {
+      if (xhr.status === 201) { // adding the new meeting to the top of the list without refetching from the server to avoid an extra round-trip
         const newMeeting = JSON.parse(xhr.responseText).data;
         allMeetings.unshift(newMeeting);
         renderMeetingsList(allMeetings);
@@ -616,7 +627,7 @@ function handlePanelSubmit() {
 // ===================== Participant Picker =====================
 
 /**
- * Loads all users from the server and renders the participant picker.
+ * loads all users from the server and renders the participant picker.
  * @param {number[]} selectedIds - Pre-selected participant IDs (for edit mode)
  */
 function loadParticipantPicker(selectedIds = []) {
@@ -646,7 +657,7 @@ function loadParticipantPicker(selectedIds = []) {
 }
 
 /**
- * Renders the participant picker list and updates the selected-chips section.
+ * renders the participant picker list and updates the selected-chips section.
  * @param {Object[]} users
  * @param {number[]} selectedIds
  */
@@ -663,7 +674,7 @@ function renderParticipantPicker(users, selectedIds = []) {
 
   const selectedSet = new Set(selectedIds.map(id => String(id)));
 
-  // Render list rows
+  // render list rows
   listEl.innerHTML = '';
   users.forEach(user => {
     const seed = user.username; // random seed comment — seed = user's email for consistency
@@ -686,7 +697,7 @@ function renderParticipantPicker(users, selectedIds = []) {
 }
 
 /**
- * Re-renders the selected-participant chips above the picker list.
+ * re-renders the selected-participant chips above the picker list.
  */
 function updateSelectedChips() {
   const chipsEl = document.getElementById('selected-participants');
@@ -712,7 +723,7 @@ function updateSelectedChips() {
 }
 
 /**
- * Returns the list of selected participant IDs from the picker checkboxes.
+ * returns the list of selected participant IDs from the picker checkboxes.
  * @returns {number[]}
  */
 function getSelectedParticipants() {
@@ -724,63 +735,92 @@ function getSelectedParticipants() {
 // ===================== Detail Modal =====================
 
 function openDetailModal(meeting) {
-  const modal      = document.getElementById('detail-modal');
+  const modal = document.getElementById('detail-modal');
   const modalTitle = document.getElementById('modal-meeting-title');
-  const modalBody  = document.getElementById('modal-body');
+  const modalBody = document.getElementById('modal-body');
 
+  // set the modal title
   modalTitle.textContent = meeting.title;
 
+  // clear the modal body
+  modalBody.innerHTML = '';
+
+  // clone the template
+  const template = document.getElementById('detail-modal-template');
+  const content = document.importNode(template.content, true);
+
+  // populate the template
+  const statusBadge = content.getElementById('status-badge');
+  const invitedBadge = content.getElementById('invited-badge');
+  const dateTime = content.getElementById('date-time');
+  const location = content.getElementById('location');
+  const descriptionSection = content.getElementById('description-section');
+  const description = content.getElementById('description');
+  const participantsSection = content.getElementById('participants-section');
+  const participantsContainer = content.getElementById('participants-container');
+  const createdAt = content.getElementById('created-at');
+
+  // set the status badge
   const status = getMeetingStatus(meeting.date);
   const badgeMap = {
-    today:    ['badge-today',    'Today'],
+    today: ['badge-today', 'Today'],
     upcoming: ['badge-upcoming', 'Upcoming'],
-    past:     ['badge-past',     'Past'],
+    past: ['badge-past', 'Past'],
   };
   const [badgeClass, badgeText] = badgeMap[status] || badgeMap.upcoming;
+  statusBadge.textContent = badgeText;
+  statusBadge.classList.add(badgeClass);
 
-  // Build participant line if any
-  let participantsHtml = '';
+  // show the invited badge if applicable
+  if (meeting.isInvited) {
+    invitedBadge.style.display = 'inline-flex';
+  }
+
+  // set the date and time
+  dateTime.textContent = `${formatDate(meeting.date)} at ${meeting.time || '—'}`;
+
+  // set the location
+  location.textContent = meeting.location || '—';
+
+  // set the description (hide if empty)
+  if (meeting.description) {
+    description.textContent = meeting.description;
+  } else {
+    descriptionSection.style.display = 'none';
+  }
+
+  // populate participants (hide section if no participants)
   if (meeting.participants && meeting.participants.length > 0) {
-    const avatars = meeting.participants.map(pid => {
+    meeting.participants.forEach(pid => {
       const user = allUsers.find(u => String(u.id) === String(pid));
       const seed = user ? user.username : String(pid);
       const name = user ? user.fullName : `User #${pid}`;
-      const url  = `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}`;
-      return `<img src="${url}" alt="${name}" title="${name}"
-               style="width:24px;height:24px;border-radius:50%;margin-right:4px;">`;
-    }).join('');
-    participantsHtml = `
-      <div class="modal-section">
-        <div class="modal-label">Participants</div>
-        <div class="modal-value" style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;">${avatars}</div>
-      </div>`;
+      const url = `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}`;
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = name;
+      img.title = name;
+      img.style.width = '24px';
+      img.style.height = '24px';
+      img.style.borderRadius = '50%';
+      img.style.marginRight = '4px';
+
+      participantsContainer.appendChild(img);
+    });
+  } else {
+    participantsSection.style.display = 'none';
   }
 
-  modalBody.innerHTML = `
-    <span class="meeting-status-badge ${badgeClass}" style="margin-bottom:12px;display:inline-flex;">${badgeText}</span>
-    ${meeting.isInvited ? '<span class="meeting-status-badge badge-invited" style="margin-bottom:12px;display:inline-flex;margin-left:6px;">Invited</span>' : ''}
-    <hr class="modal-divider">
-    <div class="modal-section">
-      <div class="modal-label">Date &amp; Time</div>
-      <div class="modal-value">${formatDate(meeting.date)} at ${meeting.time || '—'}</div>
-    </div>
-    <div class="modal-section">
-      <div class="modal-label">Location</div>
-      <div class="modal-value">${meeting.location || '—'}</div>
-    </div>
-    ${meeting.description ? `
-    <div class="modal-section">
-      <div class="modal-label">Description</div>
-      <div class="modal-value">${meeting.description}</div>
-    </div>` : ''}
-    ${participantsHtml}
-    <hr class="modal-divider">
-    <div class="modal-section">
-      <div class="modal-label">Created</div>
-      <div class="modal-value">${meeting.createdAt ? new Date(meeting.createdAt).toLocaleString() : '—'}</div>
-    </div>
-  `;
+  // set the created at timestamp
+  createdAt.textContent = meeting.createdAt
+    ? new Date(meeting.createdAt).toLocaleString()
+    : '—';
 
+  // append the populated content to the modal body
+  modalBody.appendChild(content);
+
+  // show the modal
   modal.classList.add('visible');
 }
 
@@ -832,7 +872,7 @@ function prefetchUsers() {
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState !== 4) return;
-    if (xhr.status === 200) {
+    if (xhr.status === 200) { 
       allUsers = JSON.parse(xhr.responseText).data;
       // Re-render cards now that we have names
       if (allMeetings.length > 0) renderMeetingsList(allMeetings, false);
@@ -989,52 +1029,52 @@ function renderInvitations(invitations) {
  * @returns {HTMLElement}
  */
 function createInviteCard(inv) {
-  const card = document.createElement('div');
-  card.className = `invite-card status-${inv.status}`;
+  const template = document.getElementById('invite-card-template');
+  const content = document.importNode(template.content, true);
 
-  const senderSeed   = inv.fromUser?.username || 'user';
-  const avatarUrl    = `https://api.dicebear.com/9.x/avataaars/svg?seed=${senderSeed}`;
-  const senderName   = inv.fromUser?.fullName || 'Someone';
-  const meetingTitle = inv.meeting?.title || 'Unknown meeting';
-  const meetingDate  = inv.meeting ? formatDate(inv.meeting.date) : '—';
-  const meetingTime  = inv.meeting?.time  ? ` · ${inv.meeting.time}`     : '';
-  const meetingLoc   = inv.meeting?.location ? ` · ${inv.meeting.location}` : '';
+  const card = content.querySelector('.invite-card');
+  const avatarImg = card.querySelector('.invite-avatar');
+  const senderNameEl = card.querySelector('.invite-from-name');
+  const statusBadge = card.querySelector('.meeting-status-badge');
+  const meetingTitleEl = card.querySelector('.invite-meeting-title');
+  const meetingMetaEl = card.querySelector('.invite-meeting-meta');
+  const actionsContainer = card.querySelector('.invite-actions');
+  const acceptBtn = card.querySelector('.btn-invite-accept');
+  const declineBtn = card.querySelector('.btn-invite-decline');
 
-  const statusBadge = inv.status === 'pending'
-    ? `<span class="meeting-status-badge badge-upcoming">Pending</span>`
-    : inv.status === 'accepted'
-      ? `<span class="meeting-status-badge badge-today">Accepted</span>`
-      : `<span class="meeting-status-badge badge-past">Declined</span>`;
+  // Set the card's status class
+  card.classList.add(`status-${inv.status}`);
 
-  const actionsHtml = inv.status === 'pending' ? `
-    <div class="invite-actions">
-      <button class="btn-invite-accept"  data-id="${inv.id}">Accept</button>
-      <button class="btn-invite-decline" data-id="${inv.id}">Decline</button>
-    </div>` : '';
+  // Set the sender's avatar and name
+  const senderSeed = inv.fromUser?.username || 'user';
+  avatarImg.src = `https://api.dicebear.com/9.x/avataaars/svg?seed=${senderSeed}`;
+  avatarImg.alt = inv.fromUser?.fullName || 'Someone';
+  senderNameEl.textContent = inv.fromUser?.fullName || 'Someone';
 
-  card.innerHTML = `
-    <div class="invite-card-header">
-      <div class="invite-from">
-        <img src="${avatarUrl}" class="invite-avatar" alt="${senderName}">
-        <div>
-          <div class="invite-from-name">${senderName}</div>
-          <div class="invite-from-label">invited you to</div>
-        </div>
-      </div>
-      ${statusBadge}
-    </div>
-    <div class="invite-meeting-title">${meetingTitle}</div>
-    <div class="invite-meeting-meta">${meetingDate}${meetingTime}${meetingLoc}</div>
-    ${actionsHtml}
-  `;
+  // Set the status badge
+  const badgeMap = {
+    pending: ['badge-upcoming', 'Pending'],
+    accepted: ['badge-today', 'Accepted'],
+    declined: ['badge-past', 'Declined'],
+  };
+  const [badgeClass, badgeText] = badgeMap[inv.status] || badgeMap.pending;
+  statusBadge.textContent = badgeText;
+  statusBadge.classList.add(badgeClass);
 
+  // Set the meeting title and metadata
+  meetingTitleEl.textContent = inv.meeting?.title || 'Unknown meeting';
+  const meetingDate = inv.meeting ? formatDate(inv.meeting.date) : '—';
+  const meetingTime = inv.meeting?.time ? ` · ${inv.meeting.time}` : '';
+  const meetingLoc = inv.meeting?.location ? ` · ${inv.meeting.location}` : '';
+  meetingMetaEl.textContent = `${meetingDate}${meetingTime}${meetingLoc}`;
+
+  // Show or hide the actions container based on status
   if (inv.status === 'pending') {
-    card.querySelector('.btn-invite-accept').addEventListener('click',
-      () => respondToInvite(inv.id, 'accepted', card)
-    );
-    card.querySelector('.btn-invite-decline').addEventListener('click',
-      () => respondToInvite(inv.id, 'declined', card)
-    );
+    actionsContainer.style.display = 'flex';
+    acceptBtn.addEventListener('click', () => respondToInvite(inv.id, 'accepted', card));
+    declineBtn.addEventListener('click', () => respondToInvite(inv.id, 'declined', card));
+  } else {
+    actionsContainer.style.display = 'none';
   }
 
   return card;
@@ -1110,6 +1150,7 @@ function updateMeetingsCount(count) {
 
 function renderMeetingsList(meetings, updateCache = true) {
   const grid = document.getElementById('meetings-list');
+  const emptyState = document.getElementById('empty-state-container');
   if (!grid) return;
 
   if (updateCache) {
@@ -1118,17 +1159,15 @@ function renderMeetingsList(meetings, updateCache = true) {
   }
   updateMeetingsCount(meetings.length);
 
-  grid.innerHTML = '';
+  grid.textContent = ''; 
 
   if (meetings.length === 0) {
-    grid.innerHTML = `
-      <div class="meetings-empty">
-        <div class="meetings-empty-text">No meetings found</div>
-        <div class="meetings-empty-sub">Click "New Meeting" to schedule your first one</div>
-      </div>`;
+
+    if (emptyState) emptyState.style.display = 'flex'; 
     return;
   }
 
+  if (emptyState) emptyState.style.display = 'none'; 
   meetings.forEach(meeting => addMeetingCard(meeting));
 }
 
@@ -1180,18 +1219,32 @@ function addMeetingCard(meeting) {
 
   // Participants row
   const participantsEl = clone.querySelector('.meeting-participants');
+  participantsEl.textContent = '';
   if (meeting.participants && meeting.participants.length > 0) {
-    participantsEl.innerHTML = meeting.participants.map(pid => {
+    meeting.participants.forEach(pid => {
       const user = allUsers.find(u => String(u.id) === String(pid))
                 || (currentUser && String(currentUser.id) === String(pid) ? currentUser : null);
       const seed = user ? user.username : String(pid);
       const name = user ? user.fullName  : `User #${pid}`;
       const url  = `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}`;
-      return `<span class="meeting-participant">
-        <img src="${url}" class="meeting-participant-avatar" alt="${name}" title="${name}">
-        <span class="meeting-participant-name">${name}</span>
-      </span>`;
-    }).join('');
+
+      const participantSpan = document.createElement('span');
+      participantSpan.className = 'meeting-participant';
+
+      const avatarImg = document.createElement('img');
+      avatarImg.src = url;
+      avatarImg.alt = name;
+      avatarImg.title = name;
+      avatarImg.className = 'meeting-participant-avatar';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = name;
+      nameSpan.className = 'meeting-participant-name';
+
+      participantSpan.appendChild(avatarImg);
+      participantSpan.appendChild(nameSpan);
+      participantsEl.appendChild(participantSpan);
+    });
   } else {
     participantsEl.style.display = 'none';
   }
@@ -1200,7 +1253,7 @@ function addMeetingCard(meeting) {
   clone.querySelector('.meeting-title').addEventListener('click', () => viewMeeting(meeting.id));
   clone.querySelector('.btn-card-view').addEventListener('click', () => viewMeeting(meeting.id));
 
-  // Edit button → pre-populated panel (only for meetings the user owns)
+  // Edit button  pre-populated panel (only for meetings the user owns)
   const editBtn = clone.querySelector('.btn-card-edit');
   if (meeting.isInvited) {
     editBtn.disabled = true;
@@ -1254,12 +1307,10 @@ function addMeetingCard(meeting) {
             updateMeetingsCount(allMeetings.length);
             updateStats(allMeetings);
             const g = document.getElementById('meetings-list');
-            if (g && allMeetings.length === 0) {
-              g.innerHTML = `
-                <div class="meetings-empty">
-                  <div class="meetings-empty-text">No meetings found</div>
-                  <div class="meetings-empty-sub">Click "New Meeting" to schedule one</div>
-                </div>`;
+            const emptyState = document.getElementById('empty-state-container');
+            if (g && allMeetings.length === 0 && emptyState) {
+              g.textContent = '';
+              emptyState.style.display = 'flex';
             }
           }, 200);
           showToast('Meeting deleted.', 'info');

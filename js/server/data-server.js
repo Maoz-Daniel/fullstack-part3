@@ -31,18 +31,18 @@ const DB_INVITATIONS = 'db_invitations';
 // ===================== Authentication & Session Management =====================
 
 /**
- * Stores a session token for an authenticated user
+ * stores a session token for an authenticated user
  * @param {string} sessionToken - The session token to store
  * @param {number} userId - The user ID associated with the token
  */
 function storeSession(sessionToken, userId) {
-    const sessions = JSON.parse(localStorage.getItem(DB_SESSIONS) || '{}');
+    const sessions = JSON.parse(localStorage.getItem(DB_SESSIONS) || '{}'); // load existing sessions or start with an empty object
     sessions[sessionToken] = { userId, createdAt: new Date().toISOString() };
     localStorage.setItem(DB_SESSIONS, JSON.stringify(sessions));
 }
 
 /**
- * Validates a session token and returns the associated user ID
+ * validates a session token and returns the associated user ID
  * @param {string} sessionToken - The token to validate
  * @returns {number|null} The user ID if valid, null if invalid
  */
@@ -58,7 +58,7 @@ function validateSession(sessionToken) {
 }
 
 /**
- * Middleware to validate session token and extract user ID
+ * middleware to validate session token and extract user ID
  * @param {string} sessionToken - The token to validate
  * @returns {Object|null} Error response if invalid, or null if valid
  */
@@ -66,7 +66,7 @@ function validateAuthorization(sessionToken) {
     const userId = validateSession(sessionToken);
 
     if (!userId) {
-        return {
+        return { // unauthorized response object
             status: 401,
             message: 'Unauthorized: Invalid or missing token'
         };
@@ -97,8 +97,8 @@ function parseUrl(url) {
 // ===================== Invitation Helpers =====================
 
 /**
- * Auto-creates invitation records for a list of participant IDs.
- * Skips the meeting owner and existing invitations (idempotent).
+ * auto-creates invitation records for a list of participant IDs.
+ * skips the meeting owner and existing invitations (idempotent).
  *
  * @param {number} meetingId
  * @param {number} fromUserId  - Meeting owner / person who set participants
@@ -127,18 +127,18 @@ function createInvitations(meetingId, fromUserId, participantIds) {
 // ===================== Meeting Handlers =====================
 
 /**
- * Handles GET /api/meetings
- * Returns all meetings owned by the user PLUS meetings where the user has
+ * handles GET /api/meetings
+ * returns all meetings owned by the user PLUS meetings where the user has
  * an accepted invitation (marked with isInvited: true).
  *
  * @param {number} userId
  * @returns {Object} Response object
  */
 function handleGetAllMeetings(userId) {
-    // Own meetings
+    // own meetings
     const ownMeetings = getRecords(DB_MEETINGS, m => m.userId === userId);
 
-    // Meetings the user was invited to and accepted
+    // meetings the user was invited to and accepted
     const acceptedInvites = getRecords(DB_INVITATIONS,
         inv => inv.toUserId === userId && inv.status === 'accepted'
     );
@@ -160,12 +160,12 @@ function handleGetAllMeetings(userId) {
 }
 
 /**
- * Handles GET /api/meetings/:id
- * Returns a specific meeting. Accessible by the owner or an accepted invitee.
+ * handles GET /api/meetings/:id
+ * returns a specific meeting. Accessible by the owner or an accepted invitee.
  *
  * @param {number} meetingId
  * @param {number} userId
- * @returns {Object} Response object
+ * @returns {Object} response object
  */
 function handleGetMeeting(meetingId, userId) {
     const meeting = getRecordById(DB_MEETINGS, meetingId);
@@ -177,7 +177,7 @@ function handleGetMeeting(meetingId, userId) {
         };
     }
 
-    // Access allowed for owner OR accepted invitee
+    // access allowed for owner OR accepted invitee
     if (meeting.userId !== userId) {
         const acceptedInvite = getRecords(DB_INVITATIONS,
             inv => inv.meetingId === meetingId &&
@@ -200,12 +200,12 @@ function handleGetMeeting(meetingId, userId) {
 }
 
 /**
- * Handles POST /api/meetings
- * Creates a new meeting and auto-creates invitations for all participants.
+ * handles POST /api/meetings
+ * creates a new meeting and auto-creates invitations for all participants.
  *
  * @param {Object} data - {title, date, time, location, description, participants}
  * @param {number} userId
- * @returns {Object} Response object
+ * @returns {Object} response object
  */
 function handleCreateMeeting(data, userId) {
     const { title, date, time, location, description, participants } = data;
@@ -217,7 +217,7 @@ function handleCreateMeeting(data, userId) {
         };
     }
 
-    // Normalise participants to an array of integers
+    // normalise participants to an array of integers
     let participantIds = [];
     if (participants) {
         if (typeof participants === 'string') {
@@ -240,7 +240,7 @@ function handleCreateMeeting(data, userId) {
         createdAt:    new Date().toISOString()
     });
 
-    // Auto-create invitations for all participants
+    // auto-create invitations for all participants
     createInvitations(newMeeting.id, userId, participantIds);
 
     return {
@@ -251,13 +251,13 @@ function handleCreateMeeting(data, userId) {
 }
 
 /**
- * Handles PUT /api/meetings/:id
- * Updates an existing meeting. Auto-creates invitations for any newly added participants.
+ * handles PUT /api/meetings/:id
+ * updates an existing meeting. Auto-creates invitations for any newly added participants.
  *
  * @param {number} meetingId
- * @param {Object} data - Updated fields
+ * @param {Object} data - updated fields
  * @param {number} userId
- * @returns {Object} Response object
+ * @returns {Object} response object
  */
 function handleUpdateMeeting(meetingId, data, userId) {
     const meeting = getRecordById(DB_MEETINGS, meetingId);
@@ -276,7 +276,7 @@ function handleUpdateMeeting(meetingId, data, userId) {
         };
     }
 
-    // Normalise participants field
+    // normalise participants field
     let updateData = { ...data };
     if (data.participants !== undefined) {
         if (typeof data.participants === 'string') {
@@ -290,7 +290,7 @@ function handleUpdateMeeting(meetingId, data, userId) {
 
     const updatedMeeting = updateRecord(DB_MEETINGS, meetingId, updateData);
 
-    // Auto-create invitations for newly added participants
+    // auto-create invitations for newly added participants
     if (updateData.participants) {
         createInvitations(meetingId, userId, updateData.participants);
     }
@@ -303,11 +303,11 @@ function handleUpdateMeeting(meetingId, data, userId) {
 }
 
 /**
- * Handles DELETE /api/meetings/:id
+ * handles DELETE /api/meetings/:id
  *
  * @param {number} meetingId
  * @param {number} userId
- * @returns {Object} Response object
+ * @returns {Object} response object
  */
 function handleDeleteMeeting(meetingId, userId) {
     const meeting = getRecordById(DB_MEETINGS, meetingId);
@@ -344,12 +344,12 @@ function handleDeleteMeeting(meetingId, userId) {
 // ===================== User Handlers =====================
 
 /**
- * Handles GET /api/users
- * Returns all registered users (excluding the current user and passwords).
- * Used by the participant picker on the client.
+ * handles GET /api/users
+ * returns all registered users (excluding the current user and passwords).
+ * used by the participant picker on the client.
  *
- * @param {number} userId - Current authenticated user (excluded from results)
- * @returns {Object} Response object
+ * @param {number} userId - current authenticated user (excluded from results)
+ * @returns {Object} response object
  */
 function handleGetUsers(userId) {
     const allUsers = getRecords(DB_USERS, () => true);
@@ -368,8 +368,8 @@ function handleGetUsers(userId) {
 // ===================== Invitation Handlers =====================
 
 /**
- * Handles GET /api/invitations
- * Returns all invitations sent TO the current user, enriched with meeting and
+ * handles GET /api/invitations
+ * returns all invitations sent TO the current user, enriched with meeting and
  * sender details.
  *
  * @param {number} userId
@@ -407,13 +407,13 @@ function handleGetInvitations(userId) {
 }
 
 /**
- * Handles PUT /api/invitations/:id
- * Allows the invited user to accept or decline an invitation.
+ * handles PUT /api/invitations/:id
+ * allows the invited user to accept or decline an invitation.
  *
  * @param {number} inviteId
  * @param {Object} data - { status: 'accepted' | 'declined' }
  * @param {number} userId
- * @returns {Object} Response object
+ * @returns {Object} response object
  */
 function handleUpdateInvitation(inviteId, data, userId) {
     const invitation = getRecordById(DB_INVITATIONS, inviteId);
@@ -443,8 +443,8 @@ function handleUpdateInvitation(inviteId, data, userId) {
 // ===================== Main Server Entry Point =====================
 
 /**
- * Main data server object.
- * Routes HTTP method + URL to the appropriate handler after session validation.
+ * main data server object.
+ * routes HTTP method + URL to the appropriate handler after session validation.
  */
 export const dataServer = {
     /**
@@ -455,7 +455,7 @@ export const dataServer = {
      * @returns {Object}             Response { status, message, data? }
      */
     handleRequest(method, url, data, sessionToken) {
-        // Validate session token first
+        // validate session token first
         const authError = validateAuthorization(sessionToken);
         if (authError) return authError;
 
@@ -463,7 +463,7 @@ export const dataServer = {
         const { resource, id } = parseUrl(url);
         const verb = method.toUpperCase();
 
-        // ── /api/meetings ──────────────────────────────────────────────────
+        // ── /api/meetings ──
         if (resource === 'meetings') {
             switch (verb) {
                 case 'GET':
@@ -489,13 +489,13 @@ export const dataServer = {
             }
         }
 
-        // ── /api/users ─────────────────────────────────────────────────────
+        // ── /api/users ──
         if (resource === 'users') {
             if (verb === 'GET') return handleGetUsers(userId);
             return { status: 405, message: `Method ${verb} not allowed` };
         }
 
-        // ── /api/invitations ───────────────────────────────────────────────
+        // ── /api/invitations ──
         if (resource === 'invitations') {
             switch (verb) {
                 case 'GET':

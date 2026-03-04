@@ -19,6 +19,10 @@ export class FXMLHttpRequest {
         this.timeout = this._timeoutMs; // public alias similar to XHR
     }
 
+    /**
+     * open(method, url): initializes the request method and URL.
+     * Sets readyState to 1 (OPENED) and calls onreadystatechange.
+     */
     open(method, url) {
         this._method = (method || 'GET').toUpperCase();
         this._url = url;
@@ -35,7 +39,7 @@ export class FXMLHttpRequest {
 
     /**
      * send(body): builds request object, stringifies it and passes to network.sendRequest
-     * Implements an internal timeout to simulate packet loss/timeouts.
+     * implements an internal timeout to simulate packet loss/timeouts.
      */
     send(body = null) {
         this._completed = false;
@@ -48,7 +52,7 @@ export class FXMLHttpRequest {
 
         const requestJSON = JSON.stringify(requestObj);
 
-        // Start timeout to detect dropped packet (network may never call callback)
+        // start timeout to detect dropped packet (network may never call callback)
         const timeoutMs = typeof this.timeout === 'number' ? this.timeout : this._timeoutMs;
         const timer = setTimeout(() => {
             if (this._completed) return;
@@ -61,7 +65,7 @@ export class FXMLHttpRequest {
             }
         }, timeoutMs);
 
-        // Send via network module
+        // send via network module
         try {
             sendRequest(requestJSON, (responseJSONString) => {
                 if (this._completed) return; // already timed out
