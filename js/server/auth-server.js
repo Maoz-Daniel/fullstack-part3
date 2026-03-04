@@ -65,13 +65,21 @@ function handleRegister(data) {
         createdAt: new Date().toISOString()
     });
 
+    // Generate a session token immediately so the client can auto-login
+    // without making a second network request (avoids network-simulation drops)
+    const sessionToken = generateSessionToken();
+    dataServer.storeSession(sessionToken, newUser.id);
+
     return {
         status: 201,
         message: 'User registered successfully',
         data: {
-            id: newUser.id,
-            username: newUser.username,
-            fullName: newUser.fullName
+            user: {
+                id: newUser.id,
+                username: newUser.username,
+                fullName: newUser.fullName
+            },
+            sessionToken
         }
     };
 }

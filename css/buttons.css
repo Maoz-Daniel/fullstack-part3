@@ -1,0 +1,235 @@
+/* ===================================================
+   MeetSync — Buttons
+   All interactive button variants used across the app.
+   =================================================== */
+
+/* ── Primary filled (CTA) ── */
+.btn-primary-fill {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: var(--shadow-primary);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.1px;
+}
+/* Shine shimmer on hover */
+.btn-primary-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary-fill:hover:not(:disabled)::after { left: 150%; }
+.btn-primary-fill:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
+}
+.btn-primary-fill:active:not(:disabled) { transform: translateY(0); }
+.btn-primary-fill:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+/* ── Ghost (secondary, outline) ── */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-ghost:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Icon (small square, used for close ✕ etc.) ── */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 13px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+}
+.btn-icon:hover { background: rgba(255, 255, 255, 0.07); color: var(--text); }
+
+/* ── Sidebar logout ── */
+.btn-sidebar-logout {
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-sidebar-logout:hover {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: var(--danger);
+  background: var(--danger-light);
+}
+
+/* ── Add meeting (toolbar) ── */
+.btn-add-meeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 2px 16px rgba(99, 102, 241, 0.38);
+  font-family: 'Inter', sans-serif;
+  margin-left: auto;
+}
+.btn-add-meeting:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 22px rgba(99, 102, 241, 0.55);
+}
+
+/* ── Meeting card actions ── */
+.btn-card-view {
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 11px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-card-view:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-card-edit {
+  padding: 4px 12px;
+  background: var(--primary-light);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--primary);
+  font-size: 11px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-card-edit:hover { background: rgba(99, 102, 241, 0.22); }
+
+.btn-card-delete {
+  margin-left: auto;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 11px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-card-delete:hover:not(:disabled) {
+  background: var(--danger-light);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: var(--danger);
+}
+.btn-card-delete:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Two-step delete confirmation state */
+.btn-card-delete.confirming {
+  background: var(--danger-light) !important;
+  border-color: rgba(239, 68, 68, 0.45) !important;
+  color: var(--danger) !important;
+  font-weight: 700;
+  animation: confirmPop 0.25s ease;
+}
+@keyframes confirmPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ── Invitation action buttons ── */
+.btn-invite-accept {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 16px;
+  background: var(--primary-light);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-md);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-invite-accept:hover:not(:disabled) { background: rgba(99, 102, 241, 0.22); }
+.btn-invite-accept:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn-invite-decline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 16px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-invite-decline:hover:not(:disabled) {
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--danger);
+}
+.btn-invite-decline:disabled { opacity: 0.45; cursor: not-allowed; }

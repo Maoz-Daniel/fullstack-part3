@@ -1,0 +1,333 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520">
+  <defs>
+
+    <!-- Background -->
+    <radialGradient id="bg" cx="50%" cy="50%">
+      <stop offset="0%"   stop-color="#13131A"/>
+      <stop offset="100%" stop-color="#0A0A0F"/>
+    </radialGradient>
+
+    <!-- Indigo orb top-left -->
+    <radialGradient id="orb1" cx="50%" cy="50%">
+      <stop offset="0%"   stop-color="#6366F1" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Violet orb bottom-right -->
+    <radialGradient id="orb2" cx="50%" cy="50%">
+      <stop offset="0%"   stop-color="#8B5CF6" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Cyan orb centre-right -->
+    <radialGradient id="orb3" cx="50%" cy="50%">
+      <stop offset="0%"   stop-color="#06B6D4" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Glass card gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.055"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.015"/>
+    </linearGradient>
+
+    <!-- Avatar gradients -->
+    <linearGradient id="av1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+    <linearGradient id="av2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="av3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4"/><stop offset="100%" stop-color="#0891B2"/>
+    </linearGradient>
+    <linearGradient id="av4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+    <linearGradient id="av5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/><stop offset="100%" stop-color="#16A34A"/>
+    </linearGradient>
+
+    <!-- Glow filter for cards -->
+    <filter id="cardGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Soft glow for avatars -->
+    <filter id="avatarGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Grid pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="0.3" stroke-opacity="0.05"/>
+    </pattern>
+
+    <!-- Clip for rounded cards -->
+    <clipPath id="clip1"><rect x="80"  y="80"  width="260" height="180" rx="14"/></clipPath>
+    <clipPath id="clip2"><rect x="460" y="60"  width="270" height="170" rx="14"/></clipPath>
+    <clipPath id="clip3"><rect x="120" y="300" width="220" height="155" rx="14"/></clipPath>
+    <clipPath id="clip4"><rect x="430" y="270" width="310" height="195" rx="14"/></clipPath>
+
+    <style>
+      @keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+      @keyframes float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+      @keyframes float3 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+      @keyframes float4 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(12px)} }
+      @keyframes pulse  { 0%,100%{opacity:0.6} 50%{opacity:1} }
+      @keyframes dash   { to { stroke-dashoffset: -40 } }
+      .g1 { animation: float1 6s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+      .g2 { animation: float2 7s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+      .g3 { animation: float3 5s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+      .g4 { animation: float4 8s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+      .conn { animation: dash 3s linear infinite; }
+    </style>
+  </defs>
+
+  <!-- ─── Background ─────────────────────────────────────────────────────── -->
+  <rect width="800" height="520" fill="url(#bg)"/>
+  <rect width="800" height="520" fill="url(#grid)"/>
+
+  <!-- Atmospheric orbs -->
+  <ellipse cx="180" cy="160" rx="280" ry="280" fill="url(#orb1)"/>
+  <ellipse cx="640" cy="380" rx="250" ry="250" fill="url(#orb2)"/>
+  <ellipse cx="580" cy="140" rx="180" ry="180" fill="url(#orb3)"/>
+
+  <!-- ─── Connecting lines (particle network) ──────────────────────────── -->
+  <g opacity="0.35">
+    <!-- AV1 ↔ AV2 -->
+    <line x1="150" y1="415" x2="296" y2="200" stroke="#6366F1" stroke-width="1"
+          stroke-dasharray="6 5" class="conn"/>
+    <!-- AV2 ↔ AV3 -->
+    <line x1="296" y1="200" x2="508" y2="165" stroke="#8B5CF6" stroke-width="1"
+          stroke-dasharray="6 5" class="conn" style="animation-delay:-1s"/>
+    <!-- AV3 ↔ AV4 -->
+    <line x1="508" y1="165" x2="668" y2="200" stroke="#06B6D4" stroke-width="1"
+          stroke-dasharray="6 5" class="conn" style="animation-delay:-2s"/>
+    <!-- AV1 ↔ AV5 -->
+    <line x1="150" y1="415" x2="668" y2="200" stroke="#6366F1" stroke-width="0.7"
+          stroke-dasharray="4 6" class="conn" style="animation-delay:-1.5s"/>
+    <!-- AV2 ↔ AV5 -->
+    <line x1="296" y1="200" x2="580" y2="370" stroke="#8B5CF6" stroke-width="0.7"
+          stroke-dasharray="4 6" class="conn" style="animation-delay:-0.5s"/>
+    <!-- AV4 ↔ AV5 -->
+    <line x1="668" y1="200" x2="580" y2="370" stroke="#22C55E" stroke-width="1"
+          stroke-dasharray="6 5" class="conn" style="animation-delay:-2.5s"/>
+  </g>
+
+  <!-- ─── CARD 1 — Calendar view (top-left) ────────────────────────────── -->
+  <g class="g1">
+    <!-- Card body -->
+    <rect x="80" y="80" width="260" height="180" rx="14"
+          fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
+    <!-- Top accent stripe -->
+    <rect x="80" y="80" width="260" height="40" rx="14" fill="#6366F1" fill-opacity="0.12"/>
+    <rect x="80" y="106" width="260" height="14" fill="#6366F1" fill-opacity="0.12"/>
+    <!-- Header label blocks -->
+    <rect x="96"  y="90" width="52" height="8" rx="4" fill="#6366F1" fill-opacity="0.7"/>
+    <rect x="158" y="90" width="28" height="8" rx="4" fill="#ffffff" fill-opacity="0.15"/>
+    <!-- Calendar day grid -->
+    <g fill="#ffffff" fill-opacity="0.12" font-size="0">
+      <!-- Row 1 -->
+      <rect x="96"  y="132" width="24" height="18" rx="4"/>
+      <rect x="128" y="132" width="24" height="18" rx="4"/>
+      <rect x="160" y="132" width="24" height="18" rx="4"/>
+      <rect x="192" y="132" width="24" height="18" rx="4"/>
+      <rect x="224" y="132" width="24" height="18" rx="4"/>
+      <rect x="256" y="132" width="24" height="18" rx="4"/>
+      <rect x="288" y="132" width="24" height="18" rx="4"/>
+      <!-- Row 2 -->
+      <rect x="96"  y="158" width="24" height="18" rx="4"/>
+      <rect x="128" y="158" width="24" height="18" rx="4"/>
+      <!-- Today highlight -->
+      <rect x="160" y="158" width="24" height="18" rx="4" fill="#6366F1" fill-opacity="0.65"/>
+      <rect x="192" y="158" width="24" height="18" rx="4"/>
+      <rect x="224" y="158" width="24" height="18" rx="4"/>
+      <rect x="256" y="158" width="24" height="18" rx="4"/>
+      <rect x="288" y="158" width="24" height="18" rx="4"/>
+      <!-- Row 3 -->
+      <rect x="96"  y="184" width="24" height="18" rx="4"/>
+      <rect x="128" y="184" width="24" height="18" rx="4"/>
+      <rect x="160" y="184" width="24" height="18" rx="4"/>
+      <rect x="192" y="184" width="24" height="18" rx="4"/>
+      <!-- Event span -->
+      <rect x="224" y="184" width="88" height="18" rx="4" fill="#F59E0B" fill-opacity="0.45"/>
+      <!-- Row 4 -->
+      <rect x="96"  y="210" width="24" height="18" rx="4"/>
+      <rect x="128" y="210" width="24" height="18" rx="4" fill="#8B5CF6" fill-opacity="0.55"/>
+      <rect x="160" y="210" width="24" height="18" rx="4"/>
+      <rect x="192" y="210" width="24" height="18" rx="4"/>
+      <rect x="224" y="210" width="24" height="18" rx="4"/>
+      <rect x="256" y="210" width="24" height="18" rx="4"/>
+      <rect x="288" y="210" width="24" height="18" rx="4"/>
+    </g>
+    <!-- Card glow -->
+    <rect x="80" y="80" width="260" height="180" rx="14"
+          fill="none" stroke="#6366F1" stroke-width="1" stroke-opacity="0.25" filter="url(#cardGlow)"/>
+  </g>
+
+  <!-- ─── CARD 2 — Meeting detail (top-right) ───────────────────────────── -->
+  <g class="g2">
+    <rect x="460" y="60" width="270" height="170" rx="14"
+          fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
+    <!-- Top stripe -->
+    <rect x="460" y="60" width="270" height="38" rx="14" fill="#8B5CF6" fill-opacity="0.14"/>
+    <rect x="460" y="84"  width="270" height="14" fill="#8B5CF6" fill-opacity="0.14"/>
+    <!-- Header line -->
+    <rect x="476" y="72" width="80" height="8" rx="4" fill="#8B5CF6" fill-opacity="0.75"/>
+    <rect x="566" y="72" width="40" height="8" rx="4" fill="#ffffff" fill-opacity="0.15"/>
+    <!-- Content rows -->
+    <rect x="476" y="114" width="120" height="7" rx="3" fill="#ffffff" fill-opacity="0.22"/>
+    <rect x="476" y="129" width="90"  height="7" rx="3" fill="#ffffff" fill-opacity="0.12"/>
+    <rect x="476" y="148" width="200" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/>
+    <rect x="476" y="161" width="160" height="6" rx="3" fill="#ffffff" fill-opacity="0.08"/>
+    <!-- Status chip -->
+    <rect x="476" y="178" width="55" height="18" rx="9" fill="#22C55E" fill-opacity="0.18"
+          stroke="#22C55E" stroke-width="0.6" stroke-opacity="0.4"/>
+    <rect x="484" y="184" width="38" height="6"  rx="3" fill="#22C55E" fill-opacity="0.5"/>
+    <!-- Time chip -->
+    <rect x="540" y="178" width="68" height="18" rx="9" fill="#6366F1" fill-opacity="0.18"
+          stroke="#6366F1" stroke-width="0.6" stroke-opacity="0.4"/>
+    <rect x="549" y="184" width="48" height="6"  rx="3" fill="#6366F1" fill-opacity="0.5"/>
+    <!-- Glow -->
+    <rect x="460" y="60" width="270" height="170" rx="14"
+          fill="none" stroke="#8B5CF6" stroke-width="1" stroke-opacity="0.3" filter="url(#cardGlow)"/>
+  </g>
+
+  <!-- ─── CARD 3 — Invitation card (bottom-left) ───────────────────────── -->
+  <g class="g3">
+    <rect x="120" y="300" width="220" height="155" rx="14"
+          fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
+    <!-- Left border accent -->
+    <rect x="120" y="300" width="4" height="155" rx="2" fill="#F59E0B" fill-opacity="0.75"/>
+    <!-- Header -->
+    <rect x="136" y="316" width="70" height="7" rx="3" fill="#F59E0B" fill-opacity="0.7"/>
+    <!-- Mini avatar row -->
+    <circle cx="142" cy="344" r="12" fill="url(#av2)"/>
+    <circle cx="162" cy="344" r="12" fill="url(#av3)"/>
+    <circle cx="182" cy="344" r="12" fill="url(#av4)"/>
+    <rect x="136" y="364" width="140" height="6" rx="3" fill="#ffffff" fill-opacity="0.15"/>
+    <rect x="136" y="377" width="100" height="6" rx="3" fill="#ffffff" fill-opacity="0.10"/>
+    <!-- Accept / Decline chips -->
+    <rect x="136" y="397" width="65" height="24" rx="7" fill="#6366F1" fill-opacity="0.22"
+          stroke="#6366F1" stroke-width="0.7" stroke-opacity="0.5"/>
+    <rect x="144" y="406" width="48" height="6" rx="3" fill="#6366F1" fill-opacity="0.6"/>
+    <rect x="210" y="397" width="70" height="24" rx="7" fill="#ffffff" fill-opacity="0.04"
+          stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.1"/>
+    <rect x="219" y="406" width="50" height="6" rx="3" fill="#ffffff" fill-opacity="0.18"/>
+    <!-- Glow -->
+    <rect x="120" y="300" width="220" height="155" rx="14"
+          fill="none" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.2" filter="url(#cardGlow)"/>
+  </g>
+
+  <!-- ─── CARD 4 — Stats row (bottom-right) ────────────────────────────── -->
+  <g class="g4">
+    <rect x="430" y="270" width="310" height="195" rx="14"
+          fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
+    <!-- Header -->
+    <rect x="446" y="284" width="90" height="8" rx="4" fill="#ffffff" fill-opacity="0.2"/>
+    <!-- Divider -->
+    <line x1="446" y1="303" x2="724" y2="303" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+    <!-- Mini stat cards -->
+    <!-- Stat 1 -->
+    <rect x="446" y="314" width="80" height="60" rx="8" fill="#6366F1" fill-opacity="0.1"
+          stroke="#6366F1" stroke-width="0.6" stroke-opacity="0.3"/>
+    <rect x="454" y="322" width="22" height="22" rx="5" fill="#6366F1" fill-opacity="0.2"/>
+    <rect x="454" y="350" width="32" height="9" rx="3" fill="#ffffff" fill-opacity="0.35"/>
+    <rect x="454" y="363" width="50" height="5" rx="2" fill="#ffffff" fill-opacity="0.12"/>
+    <!-- Stat 2 -->
+    <rect x="538" y="314" width="80" height="60" rx="8" fill="#F59E0B" fill-opacity="0.1"
+          stroke="#F59E0B" stroke-width="0.6" stroke-opacity="0.3"/>
+    <rect x="546" y="322" width="22" height="22" rx="5" fill="#F59E0B" fill-opacity="0.2"/>
+    <rect x="546" y="350" width="20" height="9" rx="3" fill="#ffffff" fill-opacity="0.35"/>
+    <rect x="546" y="363" width="50" height="5" rx="2" fill="#ffffff" fill-opacity="0.12"/>
+    <!-- Stat 3 -->
+    <rect x="630" y="314" width="80" height="60" rx="8" fill="#22C55E" fill-opacity="0.1"
+          stroke="#22C55E" stroke-width="0.6" stroke-opacity="0.3"/>
+    <rect x="638" y="322" width="22" height="22" rx="5" fill="#22C55E" fill-opacity="0.2"/>
+    <rect x="638" y="350" width="28" height="9" rx="3" fill="#ffffff" fill-opacity="0.35"/>
+    <rect x="638" y="363" width="50" height="5" rx="2" fill="#ffffff" fill-opacity="0.12"/>
+    <!-- Progress bar -->
+    <rect x="446" y="392" width="278" height="7" rx="3" fill="#ffffff" fill-opacity="0.06"/>
+    <rect x="446" y="392" width="190" height="7" rx="3" fill="#6366F1" fill-opacity="0.55"/>
+    <!-- Bottom row labels -->
+    <rect x="446" y="410" width="60" height="5" rx="2" fill="#ffffff" fill-opacity="0.1"/>
+    <rect x="446" y="423" width="100" height="5" rx="2" fill="#ffffff" fill-opacity="0.08"/>
+    <!-- Glow -->
+    <rect x="430" y="270" width="310" height="195" rx="14"
+          fill="none" stroke="#6366F1" stroke-width="1" stroke-opacity="0.2" filter="url(#cardGlow)"/>
+  </g>
+
+  <!-- ─── Floating avatar badges ────────────────────────────────────────── -->
+  <!-- AV1 — bottom-left floating -->
+  <g class="g3" filter="url(#avatarGlow)">
+    <circle cx="150" cy="415" r="22" fill="url(#av1)" opacity="0.9"/>
+    <circle cx="150" cy="415" r="22" fill="none" stroke="#6366F1" stroke-width="1.5" stroke-opacity="0.5"/>
+    <!-- Person silhouette placeholder -->
+    <circle cx="150" cy="410" r="6"  fill="#fff" fill-opacity="0.6"/>
+    <ellipse cx="150" cy="424" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
+  </g>
+
+  <!-- AV2 — near card 1 top -->
+  <g class="g1" filter="url(#avatarGlow)">
+    <circle cx="296" cy="200" r="20" fill="url(#av2)" opacity="0.9"/>
+    <circle cx="296" cy="200" r="20" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-opacity="0.5"/>
+    <circle cx="296" cy="195" r="6"  fill="#fff" fill-opacity="0.6"/>
+    <ellipse cx="296" cy="209" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
+  </g>
+
+  <!-- AV3 — centre top -->
+  <g class="g2" filter="url(#avatarGlow)">
+    <circle cx="508" cy="165" r="20" fill="url(#av3)" opacity="0.9"/>
+    <circle cx="508" cy="165" r="20" fill="none" stroke="#06B6D4" stroke-width="1.5" stroke-opacity="0.5"/>
+    <circle cx="508" cy="160" r="6"  fill="#fff" fill-opacity="0.6"/>
+    <ellipse cx="508" cy="174" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
+  </g>
+
+  <!-- AV4 — near card 2 -->
+  <g class="g4" filter="url(#avatarGlow)">
+    <circle cx="668" cy="200" r="20" fill="url(#av4)" opacity="0.9"/>
+    <circle cx="668" cy="200" r="20" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.5"/>
+    <circle cx="668" cy="195" r="6"  fill="#fff" fill-opacity="0.6"/>
+    <ellipse cx="668" cy="209" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
+  </g>
+
+  <!-- AV5 — centre-right mid -->
+  <g class="g1" filter="url(#avatarGlow)">
+    <circle cx="580" cy="370" r="20" fill="url(#av5)" opacity="0.9"/>
+    <circle cx="580" cy="370" r="20" fill="none" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.5"/>
+    <circle cx="580" cy="365" r="6"  fill="#fff" fill-opacity="0.6"/>
+    <ellipse cx="580" cy="379" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
+  </g>
+
+  <!-- ─── Floating particles ────────────────────────────────────────────── -->
+  <g fill="#6366F1" opacity="0.45" class="conn">
+    <circle cx="370" cy="130" r="2.5"/>
+    <circle cx="400" cy="240" r="2"/>
+    <circle cx="350" cy="380" r="2"/>
+    <circle cx="620" cy="300" r="2.5"/>
+    <circle cx="70"  cy="330" r="2"/>
+    <circle cx="740" cy="160" r="2"/>
+    <circle cx="760" cy="420" r="2.5"/>
+  </g>
+  <g fill="#8B5CF6" opacity="0.35" class="conn" style="animation-delay:-1.5s">
+    <circle cx="420" cy="70"  r="2"/>
+    <circle cx="310" cy="270" r="2.5"/>
+    <circle cx="500" cy="430" r="2"/>
+    <circle cx="710" cy="340" r="2.5"/>
+  </g>
+  <g fill="#06B6D4" opacity="0.3" class="conn" style="animation-delay:-3s">
+    <circle cx="200" cy="230" r="2"/>
+    <circle cx="640" cy="130" r="2.5"/>
+    <circle cx="380" cy="470" r="2"/>
+  </g>
+
+  <!-- ─── Subtle vignette ───────────────────────────────────────────────── -->
+  <radialGradient id="vig" cx="50%" cy="50%">
+    <stop offset="55%"  stop-color="transparent"/>
+    <stop offset="100%" stop-color="#0A0A0F" stop-opacity="0.65"/>
+  </radialGradient>
+  <rect width="800" height="520" fill="url(#vig)"/>
+</svg>

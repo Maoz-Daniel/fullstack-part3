@@ -3,141 +3,360 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SPA Meetings Management</title>
-  <style>
-    /* Basic internal styles for readability */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f9;
-    }
-    #app-container {
-      width: 100%;
-      max-width: 450px;
-      padding: 20px;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-    input {
-      margin-bottom: 10px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    button {
-      padding: 10px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:disabled {
-      background-color: #ccc;
-    }
-    a {
-      text-align: center;
-      margin-top: 10px;
-      color: #007BFF;
-      text-decoration: none;
-      display: block;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .meeting-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-    .delete-meeting-button {
-      background-color: #dc3545;
-      padding: 5px 10px;
-    }
-    hr {
-      border: 0;
-      border-top: 1px solid #eee;
-      margin: 20px 0;
-    }
-  </style>
+  <title>MeetSync</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Design system — load order: tokens → base → components → features → utilities → responsive -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/meetings.css">
+  <link rel="stylesheet" href="css/invitations.css">
+  <link rel="stylesheet" href="css/overlays.css">
+  <link rel="stylesheet" href="css/toasts.css">
+  <link rel="stylesheet" href="css/utilities.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
+
+  <!-- Main SPA mount point -->
   <div id="app-container"></div>
 
+  <!-- Global toast container (persists across route changes) -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ============================================================
+       LOGIN TEMPLATE
+       ============================================================ -->
   <template id="login-template">
-    <div>
-      <h1>Login</h1>
-      <form id="login-form">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Login</button>
-      </form>
-      <a href="#/register">Don't have an account? Register</a>
-    </div>
-  </template>
+    <div class="auth-page">
+      <div class="auth-card">
 
-  <template id="register-template">
-    <div>
-      <h1>Register</h1>
-      <form id="register-form">
-        <input type="text" id="name" placeholder="Full Name" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit">Register</button>
-      </form>
-      <a href="#/login">Already have an account? Login</a>
-    </div>
-  </template>
+        <div class="auth-logo">
+          <img src="assets/logo.png" alt="MeetSync" class="auth-logo-img">
+        </div>
 
-  <template id="meetings-template">
-    <div>
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>My Meetings</h1>
-        <button id="logout-button" style="background-color: #6c757d;">Logout</button>
+        <h1 class="auth-heading">Welcome back</h1>
+        <p class="auth-subheading">Sign in to your account to continue</p>
+
+        <div id="auth-error" class="auth-error-banner"></div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group" id="email-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="you@example.com" autocomplete="email">
+            <span class="error-message" id="email-error">Please enter a valid email address</span>
+          </div>
+
+          <div class="form-group" id="password-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Your password" autocomplete="current-password">
+            <span class="error-message" id="password-error">Password is required</span>
+          </div>
+
+          <button type="submit" class="btn-primary-fill mt-2">Sign In</button>
+        </form>
+
+        <div class="auth-link-row">
+          Don't have an account? <a href="#/register">Create one</a>
+        </div>
+
+        <!-- Demo credentials hint -->
+        <div style="margin-top:20px;padding:10px 14px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);border-radius:10px;font-size:12px;color:var(--text-secondary);">
+          <div style="font-weight:700;color:var(--text-muted);margin-bottom:5px;">Demo accounts</div>
+          <div>alex@meetsync.dev &nbsp;/&nbsp; alex123</div>
+          <div>maya@meetsync.dev &nbsp;/&nbsp; maya123</div>
+          <div>jordan@meetsync.dev &nbsp;/&nbsp; jordan123</div>
+        </div>
       </div>
-      <hr>
-      
-      <h3>Add New Meeting</h3>
-      <form id="add-meeting-form" style="margin-bottom: 20px;">
-        <input type="text" id="meeting-title" placeholder="Meeting Title" required>
-        <input type="date" id="meeting-date" required>
-        <input type="time" id="meeting-time" required>
-        <input type="text" id="meeting-location" placeholder="Location" required>
-        <button type="submit">Save Meeting</button>
-      </form>
-
-      <hr>
-      <div id="meetings-list"></div>
     </div>
   </template>
 
-  <template id="meeting-item-template">
-    <div class="meeting-item">
-      <span>
-        <strong class="meeting-title-display"></strong><br>
-        <small class="meeting-details-display"></small>
-      </span>
-      <button class="delete-meeting-button">Delete</button>
+  <!-- ============================================================
+       REGISTER TEMPLATE
+       ============================================================ -->
+  <template id="register-template">
+    <div class="auth-page">
+      <div class="auth-card">
+
+        <div class="auth-logo">
+          <img src="assets/logo.png" alt="MeetSync" class="auth-logo-img">
+        </div>
+
+        <h1 class="auth-heading">Create account</h1>
+        <p class="auth-subheading">Join MeetSync to manage your meetings</p>
+
+        <div id="auth-error" class="auth-error-banner"></div>
+
+        <form id="register-form" novalidate>
+          <div class="form-group" id="name-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="name" class="form-control" placeholder="John Doe" autocomplete="name">
+            <span class="error-message" id="name-error">Full name is required</span>
+          </div>
+
+          <div class="form-group" id="email-group">
+            <label class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="you@example.com" autocomplete="email">
+            <span class="error-message" id="email-error">Please enter a valid email address</span>
+          </div>
+
+          <div class="form-group" id="password-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Minimum 6 characters" autocomplete="new-password">
+            <span class="error-message" id="password-error">Password must be at least 6 characters</span>
+          </div>
+
+          <button type="submit" class="btn-primary-fill mt-2">Create Account</button>
+        </form>
+
+        <div class="auth-link-row">
+          Already have an account? <a href="#/login">Sign in</a>
+        </div>
+      </div>
     </div>
   </template>
 
-  <script type="module" src="js/client/app.js"></script>
-</body>
-</html>
+  <!-- ============================================================
+       MEETINGS TEMPLATE
+       ============================================================ -->
+  <template id="meetings-template">
+    <div class="meetings-page">
+      <div class="app-shell">
 
+        <!-- ── Sidebar ── -->
+        <aside class="sidebar">
+          <div class="sidebar-top">
+            <img src="assets/logo.png" alt="MeetSync" class="sidebar-logo-img">
+          </div>
+
+          <nav class="sidebar-nav">
+            <!-- Main nav -->
+            <div class="sidebar-section-label">Workspace</div>
+
+            <div class="sidebar-item active" id="nav-meetings">
+              <span class="sidebar-item-label">Meetings</span>
+              <span class="sidebar-item-badge" id="sidebar-meetings-count">0</span>
+            </div>
+
+            <div class="sidebar-item" id="nav-invitations">
+              <span class="sidebar-item-label">Invitations</span>
+              <span class="sidebar-item-badge" id="invite-badge" style="display:none">0</span>
+            </div>
+
+            <!-- Filter (only visible when Meetings is active) -->
+            <div id="sidebar-filter-section">
+              <div class="sidebar-section-label" style="margin-top:20px">Filter</div>
+
+              <div class="sidebar-item sidebar-filter-item active" id="filter-all">
+                <span class="sidebar-item-label">All Meetings</span>
+              </div>
+
+              <div class="sidebar-item sidebar-filter-item" id="filter-today">
+                <span class="sidebar-item-label">Today</span>
+              </div>
+
+              <div class="sidebar-item sidebar-filter-item" id="filter-upcoming">
+                <span class="sidebar-item-label">Upcoming</span>
+              </div>
+            </div>
+          </nav>
+
+          <div class="sidebar-footer">
+            <div class="sidebar-user-card">
+              <!-- DiceBear avatar image -->
+              <div class="sidebar-avatar">
+                <img id="sidebar-avatar-img" class="avatar-img" alt="avatar" src="">
+              </div>
+              <div class="sidebar-user-info">
+                <div class="sidebar-user-name" id="sidebar-username"></div>
+                <div class="sidebar-user-email" id="sidebar-email"></div>
+              </div>
+            </div>
+            <button class="btn-sidebar-logout" id="logout-button">
+              <span>↪</span> Sign Out
+            </button>
+          </div>
+        </aside>
+
+        <!-- ── Main Area ── -->
+        <div class="main-area">
+
+          <!-- Page Header -->
+          <div class="main-header">
+            <div class="greeting-text" id="greeting-text">Good morning!</div>
+            <div class="date-text" id="page-date"></div>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon total"></div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-total">0</div>
+                <div class="stat-label">Total Meetings</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon today"></div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-today">0</div>
+                <div class="stat-label">Today</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon upcoming"></div>
+              <div class="stat-info">
+                <div class="stat-number" id="stat-upcoming">0</div>
+                <div class="stat-label">Upcoming</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Area: contains both Meetings and Invitations sections -->
+          <div class="content-area">
+
+            <!-- ── Meetings Section (default visible) ── -->
+            <div id="meetings-section">
+              <div class="meetings-toolbar">
+                <div class="search-wrapper">
+                  <input type="text" class="search-input" id="search-input" placeholder="Search by title, location…">
+                </div>
+                <span class="meetings-count-chip" id="meetings-count">0 meetings</span>
+                <button class="btn-add-meeting" id="open-add-panel">+ New Meeting</button>
+              </div>
+              <div class="meetings-grid" id="meetings-list"></div>
+            </div>
+
+            <!-- ── Invitations Section (hidden by default) ── -->
+            <div id="invitations-section" style="display:none"></div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Overlay (dims page when panel / modal open) ── -->
+      <div class="overlay" id="panel-overlay"></div>
+
+      <!-- ── Add / Edit Slide Panel ── -->
+      <div class="slide-panel" id="meeting-panel">
+        <div class="panel-header">
+          <h2 class="panel-title" id="panel-heading">New Meeting</h2>
+          <button class="btn-icon" id="close-panel">✕</button>
+        </div>
+
+        <div class="panel-body">
+          <form id="meeting-form" novalidate>
+            <!-- Hidden field for edit mode -->
+            <input type="hidden" id="edit-meeting-id">
+
+            <div class="form-group">
+              <label class="form-label">Title *</label>
+              <input type="text" id="panel-title-input" class="form-control" placeholder="e.g. Team Standup">
+              <span class="error-message" id="panel-title-error">Title is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Date *</label>
+              <input type="date" id="panel-date" class="form-control">
+              <span class="error-message" id="panel-date-error">Date is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Time *</label>
+              <input type="time" id="panel-time" class="form-control">
+              <span class="error-message" id="panel-time-error">Time is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Location *</label>
+              <input type="text" id="panel-location" class="form-control" placeholder="e.g. Room A, Zoom link">
+              <span class="error-message" id="panel-location-error">Location is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea id="panel-description" class="form-control" rows="3" placeholder="Optional notes…"></textarea>
+            </div>
+
+            <!-- Participant Picker -->
+            <div class="form-group" id="participant-picker-group">
+              <label class="form-label">Participants</label>
+              <!-- Selected chips shown here -->
+              <div id="selected-participants" class="selected-participants"></div>
+              <!-- Scrollable user list -->
+              <div id="participant-list" class="participant-list">
+                <div class="participant-list-empty">Loading users…</div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel-footer">
+          <button class="btn-ghost" id="cancel-panel">Cancel</button>
+          <button class="btn-primary-fill" id="submit-meeting">Save Meeting</button>
+        </div>
+      </div>
+
+      <!-- ── Meeting Detail Modal ── -->
+      <div class="modal-overlay" id="detail-modal">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h2 class="modal-title" id="modal-meeting-title">Meeting Details</h2>
+            <button class="btn-icon" id="close-modal">✕</button>
+          </div>
+          <div id="modal-body"></div>
+        </div>
+      </div>
+
+    </div>
+  </template>
+
+  <!-- ============================================================
+       MEETING CARD TEMPLATE (used in JS for each list item)
+       ============================================================ -->
+  <template id="meeting-card-template">
+    <div class="meeting-card">
+      <div class="meeting-card-header">
+        <div class="meeting-header-left">
+          <span class="meeting-title"></span>
+          <span class="meeting-status-badge"></span>
+        </div>
+        <span class="meeting-date-chip"></span>
+      </div>
+      <div class="meeting-meta">
+        <div class="meeting-meta-row">
+          <span class="meeting-time-display"></span>
+        </div>
+        <div class="meeting-meta-row">
+          <span class="meeting-location-display"></span>
+        </div>
+      </div>
+      <div class="meeting-participants"></div>
+      <div class="meeting-card-footer">
+        <button class="btn-card-view">View</button>
+        <button class="btn-card-edit">Edit</button>
+        <button class="btn-card-delete">Delete</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- Bootstrap 5 JS (optional utilities) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- SPA entry point -->
   <script type="module" src="js/client/app.js"></script>
 </body>
 </html>

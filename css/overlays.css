@@ -1,0 +1,89 @@
+/* ===================================================
+   MeetSync — Overlays: Page Dimmer, Slide Panel & Modal
+   z-index layers:
+     overlay        200
+     slide-panel    201
+     modal-overlay  300
+   =================================================== */
+
+/* ── Page dimmer overlay ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  display: none;
+}
+.overlay.visible { display: block; }
+
+/* ── Add / Edit slide panel ── */
+.slide-panel {
+  position: fixed;
+  top: 0; right: 0;
+  width: 400px; max-width: 100vw;
+  height: 100vh;
+  background: var(--surface-2);
+  border-left: 1px solid var(--border-strong);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -12px 0 60px rgba(0, 0, 0, 0.55);
+}
+.slide-panel.open { transform: translateX(0); }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.panel-title { font-size: 16px; font-weight: 700; color: var(--text); }
+
+.panel-body   { flex: 1; overflow-y: auto; padding: 22px; }
+
+.panel-footer {
+  padding: 14px 22px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.panel-footer .btn-primary-fill { flex: 1; width: auto; }
+
+/* ── Meeting detail modal ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  display: none;
+}
+.modal-overlay.visible { display: flex; }
+
+.modal-card {
+  background: var(--surface-2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  width: 100%; max-width: 480px;
+  padding: 28px;
+  box-shadow: var(--shadow-lg);
+  animation: modalPop 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header  { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 12px; }
+.modal-title   { font-size: 19px; font-weight: 800; color: var(--text); line-height: 1.3; }
+.modal-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.modal-section { margin-bottom: 14px; }
+.modal-label   { font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 4px; }
+.modal-value   { font-size: 14px; color: var(--text-muted); line-height: 1.5; }

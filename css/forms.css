@@ -1,0 +1,65 @@
+/* ===================================================
+   MeetSync — Form Controls
+   Covers: groups, labels, inputs, textareas,
+           validation states, error banner.
+   =================================================== */
+
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.form-control {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text) !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  outline: none !important;
+}
+.form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-glow) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+.form-control::placeholder { color: var(--text-secondary) !important; }
+textarea.form-control { resize: vertical; min-height: 80px; }
+
+/* Validation error state */
+.input-error .form-control {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px var(--danger-light) !important;
+}
+.error-message {
+  color: var(--danger);
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+  font-weight: 500;
+}
+.error-message.visible { display: block; }
+
+/* Auth-level error banner (shown on bad credentials etc.) */
+.auth-error-banner {
+  display: none;
+  padding: 10px 14px;
+  background: var(--danger-light);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.auth-error-banner.visible { display: block; }

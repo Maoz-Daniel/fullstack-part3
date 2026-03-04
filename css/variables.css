@@ -1,0 +1,52 @@
+/* ===================================================
+   MeetSync — Design Tokens
+   Inspired by: Linear, Vercel, Supabase dark mode
+   =================================================== */
+
+:root {
+  /* Brand */
+  --primary:       #6366F1;
+  --primary-dark:  #4F46E5;
+  --primary-light: rgba(99, 102, 241, 0.12);
+  --primary-glow:  rgba(99, 102, 241, 0.28);
+
+  /* Backgrounds */
+  --bg:        #0E0E10;
+  --surface:   #18181B;
+  --surface-2: #1F1F24;
+
+  /* Borders */
+  --border:        rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.12);
+
+  /* Text */
+  --text:           #F4F4F5;
+  --text-muted:     #A1A1AA;
+  --text-secondary: #71717A;
+
+  /* Semantic colours */
+  --danger:        #EF4444;
+  --danger-light:  rgba(239, 68, 68, 0.1);
+  --success:       #22C55E;
+  --success-light: rgba(34, 197, 94, 0.1);
+  --today:         #F59E0B;
+  --today-light:   rgba(245, 158, 11, 0.12);
+  --info:          #38BDF8;
+
+  /* Border radius scale */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   18px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --sidebar-width: 240px;
+
+  /* Shadows */
+  --shadow-sm:      0 1px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md:      0 4px 20px rgba(0, 0, 0, 0.5);
+  --shadow-lg:      0 8px 48px rgba(0, 0, 0, 0.65);
+  --shadow-primary: 0 4px 22px rgba(99, 102, 241, 0.45);
+}
