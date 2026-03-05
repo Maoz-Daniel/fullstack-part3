@@ -25,18 +25,29 @@ let activeFilter      = 'all';        // 'all' | 'today' | 'upcoming'
  * @param {'success'|'error'|'info'} type
  */
 function showToast(message, type = 'info') {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
+  const containerId = 'fajax-toast-container';
+  const toastClass = 'fajax-toast';
 
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
+  // ensure the toast container exists; create it dynamically if missing
+  let container = document.getElementById(containerId);
+  if (!container) {
+    container = document.createElement('div');
+    container.id = containerId;
+    container.className = containerId;
+    document.body.appendChild(container);
+  }
+
+  // create the toast element
   const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${icons[type] || 'ℹ'}</span> ${message}`;
+  toast.className = `${toastClass} ${type}`;
+  toast.textContent = message;
+
+  // append to container
   container.appendChild(toast);
 
+  // smooth fade-out and removal after 3.5 seconds
   setTimeout(() => {
     toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.3s ease';
     setTimeout(() => toast.remove(), 300);
   }, 3500);
 }
@@ -50,6 +61,10 @@ function showToast(message, type = 'info') {
 function handleRoute(currentRoute) {
   switch (currentRoute) {
     case '#/login':
+      if (sessionToken) {  //
+        navigateTo('#/meetings');
+        return;
+      }                     
       setupLoginView();
       break;
     case '#/register':
@@ -330,6 +345,7 @@ function updateStats(meetings) {
  * @param {'meetings'|'invitations'} view
  */
 function setActiveView(view) {
+  console.log(`--- setActiveView called with: ${view} ---`);
   currentActiveView = view;
 
   const meetingsSection  = document.getElementById('meetings-section');
@@ -344,6 +360,8 @@ function setActiveView(view) {
     if (navMeetings)     navMeetings.classList.add('active');
     if (navInvitations)  navInvitations.classList.remove('active');
     if (filterSection)   filterSection.style.display = '';
+
+    fetchMeetings(); // refresh meetings list in case there were changes while the user was viewing invitations
   } else {
     if (meetingsSection) meetingsSection.style.display = 'none';
     if (invSection)      invSection.style.display = '';
@@ -376,6 +394,7 @@ function applyFilter(filter) {
 }
 
 function setupMeetingsView() {
+  console.log('--- setupMeetingsView STARTED ---');
   // reset view state
   currentActiveView = 'meetings';
   activeFilter      = 'all';
@@ -453,7 +472,8 @@ function setupMeetingsView() {
   setupPanel(); // sets up the add/edit meeting slide panel (event listeners, form handling)
   setupDetailModal(); // sets up the meeting details modal (event listeners, dynamic content population)
   prefetchUsers(); // pre-load user list so participant names resolve on cards
-  fetchMeetings(); // load the relevant meetings for the user and render them
+  //fetchMeetings(); // load the relevant meetings for the user and render them
+  setActiveView('meetings');
   fetchInvitationBadge(); // load pending invite count for sidebar badge
 }
 
@@ -571,13 +591,15 @@ function handlePanelSubmit() {
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState !== 4) return;
+
       submitBtn.disabled = false; // re-enable the button regardless of success or failure to allow retrying
       submitBtn.textContent = 'Save Changes';
 
-      if (xhr.status === 0) {
+      if (xhr.status === 0 || xhr.status === "0") {
         showToast('Network error — request timed out. Please try again.', 'error');
         return;
       }
+
       if (xhr.status === 200) {
         const updated = JSON.parse(xhr.responseText).data;
         const idx = allMeetings.findIndex(m => String(m.id) === String(updated.id));
@@ -603,7 +625,7 @@ function handlePanelSubmit() {
       submitBtn.disabled = false; // re-enable the button regardless of success or failure to allow retrying
       submitBtn.textContent = 'Save Meeting';
 
-      if (xhr.status === 0) {
+      if (xhr.status == 0) {
         showToast('Network error — request timed out. Please try again.', 'error');
         return;
       }
@@ -875,7 +897,7 @@ function prefetchUsers() {
     if (xhr.status === 200) { 
       allUsers = JSON.parse(xhr.responseText).data;
       // Re-render cards now that we have names
-      if (allMeetings.length > 0) renderMeetingsList(allMeetings, false);
+      //if (allMeetings.length > 0) renderMeetingsList(allMeetings, false);
     }
   };
 
@@ -884,7 +906,14 @@ function prefetchUsers() {
 
 // ===================== Fetch All Meetings =====================
 
+let isFetchingMeetings = false; // flag to prevent multiple simultaneous fetches if the user clicks around rapidly
+
 function fetchMeetings() {
+  console.trace('--- fetchMeetings FIRED! ---');
+
+  if (isFetchingMeetings) return; // prevent multiple simultaneous fetches
+  isFetchingMeetings = true;
+
   const grid = document.getElementById('meetings-list');
   if (grid) {
     grid.innerHTML = `
@@ -899,12 +928,19 @@ function fetchMeetings() {
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState !== 4) return;
+    isFetchingMeetings = false; // allow future fetches
 
     if (xhr.status === 200) {
       const meetings = JSON.parse(xhr.responseText).data;
       renderMeetingsList(meetings);
     } else if (xhr.status === 0) {
-      if (grid) grid.innerHTML = '';
+      if (grid) {
+        grid.replaceChildren();
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'meetings-empty';
+        errorDiv.textContent = 'Network error: Could not load meetings. Please try again.';
+        grid.appendChild(errorDiv);
+      }
       showToast('Network error loading meetings. Please refresh.', 'error');
     } else {
       if (grid) grid.innerHTML = '';
@@ -921,6 +957,7 @@ function fetchMeetings() {
  * Loads the pending invitation count and updates the sidebar badge.
  * Called on meetings view setup and after accepting/declining.
  */
+
 function fetchInvitationBadge() {
   const xhr = new FXMLHttpRequest();
   xhr.open('GET', '/api/invitations');
@@ -952,7 +989,12 @@ function updateInvitationBadge(count) {
 /**
  * Fetches invitations from the server and renders them in #invitations-section.
  */
+let isFetchingInvitations = false; // flag to prevent multiple simultaneous fetches if the user clicks around rapidly
+
 function loadInvitations() {
+  if (isFetchingInvitations) return; // prevent multiple simultaneous fetches if the user clicks around
+  isFetchingInvitations = true;
+
   const section = document.getElementById('invitations-section');
   if (!section) return;
   section.innerHTML = `
@@ -966,6 +1008,7 @@ function loadInvitations() {
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState !== 4) return;
+    isFetchingInvitations = false; // allow future fetches when user re-opens the section
 
     if (xhr.status === 200) {
       const invitations = JSON.parse(xhr.responseText).data;
@@ -1149,6 +1192,8 @@ function updateMeetingsCount(count) {
 }
 
 function renderMeetingsList(meetings, updateCache = true) {
+  console.log('--- renderMeetingsList DRAWING TO SCREEN ---');
+
   const grid = document.getElementById('meetings-list');
   const emptyState = document.getElementById('empty-state-container');
   if (!grid) return;
@@ -1332,6 +1377,13 @@ function addMeetingCard(meeting) {
   grid.appendChild(clone);
 }
 
+
 // ===================== Initialize Router =====================
+
+
+setTimeout(() => {
+  console.log('🚨 [DEBUG BOOT] Testing showToast on page load...');
+  showToast('Test Toast Works!', 'info');
+}, 2000);
 
 initRouter(handleRoute);
