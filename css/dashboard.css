@@ -59,9 +59,10 @@
   transition: transform 0.2s;
 }
 .stat-card:hover .stat-icon { transform: scale(1.1) rotate(-5deg); }
-.stat-icon.total    { background: var(--primary-light); }
-.stat-icon.today    { background: var(--today-light); }
-.stat-icon.upcoming { background: var(--success-light); }
+.stat-icon-img { width: 24px; height: 24px; object-fit: contain; }
+.stat-icon.total    { background: #6366F1; }
+.stat-icon.today    { background: #F59E0B; }
+.stat-icon.upcoming { background: #22C55E; }
 
 .stat-info { flex: 1; min-width: 0; }
 .stat-number {

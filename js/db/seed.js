@@ -15,7 +15,7 @@ const DB_MEETINGS    = 'db_meetings';
 const DB_INVITATIONS = 'db_invitations';
 const SEED_KEY       = 'meetsync_seed_v1';
 
-// ── Date helpers ──────────────────────────────────────────────────────────────
+//  Date helpers 
 
 function daysFromNow(n) {
   const d = new Date();
@@ -23,12 +23,12 @@ function daysFromNow(n) {
   return d.toISOString().split('T')[0]; // "YYYY-MM-DD"
 }
 
-// ── Main seed function ────────────────────────────────────────────────────────
+//  Main seed function 
 
 export function initSeed() {
   if (localStorage.getItem(SEED_KEY)) return; // already seeded
 
-  // ── 1. Create mock users ─────────────────────────────────────────────────
+  //  1. Create mock users 
 
   const alex = insertRecord(DB_USERS, {
     username:  'alex@meetsync.dev',
@@ -51,7 +51,7 @@ export function initSeed() {
     createdAt: new Date().toISOString(),
   });
 
-  // ── 2. Create meetings ───────────────────────────────────────────────────
+  //  2. Create meetings 
 
   // Alex's meetings
   const m1 = insertRecord(DB_MEETINGS, {

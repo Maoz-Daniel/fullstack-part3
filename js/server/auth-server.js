@@ -15,7 +15,7 @@ import { dataServer } from './data-server.js';
 
 const DB_USERS = 'db_users';
 
-// ===================== Private Helper Functions =====================
+//  Private Helper Functions 
 
 /**
  * Generates a simple session token for simulation purposes
@@ -27,7 +27,7 @@ function generateSessionToken() {
            Math.random().toString(36).substring(2, 15);
 }
 
-// ===================== Action Handlers =====================
+//  Action Handlers 
 
 /**
  * Handles REGISTER action
@@ -125,7 +125,7 @@ function handleLogin(data) {
     };
 }
 
-// ===================== Main Server Entry Point =====================
+//  Main Server Entry Point 
 
 /**
  * Main authentication server object

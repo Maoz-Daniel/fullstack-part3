@@ -1,4 +1,4 @@
-// Vanilla Client-Side Router for SPA
+// Client-Side Router for SPA
 
 // Route mapping between URL hashes and template IDs
 const routes = {
