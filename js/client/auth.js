@@ -48,7 +48,7 @@ export function setupLoginView() {
       submitBtn.textContent = 'Sign In';
 
       if (xhr.status === 0) {
-        setAuthError('auth-error', 'Network error — request timed out. Please try again.');
+        setAuthError('auth-error', 'Network error - request timed out. Please try again.');
         return;
       }
       if (xhr.status === 200) {
@@ -119,7 +119,7 @@ export function setupRegisterView() {
       if (xhr.status === 0) {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Create Account';
-        setAuthError('auth-error', 'Network error — request timed out. Please try again.');
+        setAuthError('auth-error', 'Network error - request timed out. Please try again.');
         return;
       }
       if (xhr.status === 201) {

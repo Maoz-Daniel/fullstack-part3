@@ -38,8 +38,8 @@ export function openDetailModal(meeting) {
 
   if (meeting.isInvited) invitedBadge.style.display = 'inline-flex';
 
-  dateTime.textContent = `${formatDate(meeting.date)} at ${meeting.time || '—'}`;
-  location.textContent = meeting.location || '—';
+  dateTime.textContent = `${formatDate(meeting.date)} at ${meeting.time || '-'}`;
+  location.textContent = meeting.location || '-';
 
   if (meeting.description) {
     description.textContent = meeting.description;
@@ -65,7 +65,7 @@ export function openDetailModal(meeting) {
 
   createdAt.textContent = meeting.createdAt
     ? new Date(meeting.createdAt).toLocaleString()
-    : '—';
+    : '-';
 
   modalBody.appendChild(content);
   modal.classList.add('visible');
@@ -93,7 +93,7 @@ export function viewMeeting(meetingId) {
     if (xhr.status === 200) {
       openDetailModal(JSON.parse(xhr.responseText).data);
     } else if (xhr.status === 0) {
-      showToast('Network error — could not load meeting details. Please try again.', 'error');
+      showToast('Network error - could not load meeting details. Please try again.', 'error');
     } else {
       showToast(`Error loading meeting (${xhr.status})`, 'error');
     }

@@ -126,7 +126,7 @@ export function handlePanelSubmit() {
       submitBtn.textContent = 'Save Changes';
 
       if (xhr.status === 0 || xhr.status === '0') {
-        showToast('Network error — request timed out. Please try again.', 'error');
+        showToast('Network error - request timed out. Please try again.', 'error');
         return;
       }
       if (xhr.status === 200) {
@@ -156,7 +156,7 @@ export function handlePanelSubmit() {
       submitBtn.textContent = 'Save Meeting';
 
       if (xhr.status == 0) {
-        showToast('Network error — request timed out. Please try again.', 'error');
+        showToast('Network error - request timed out. Please try again.', 'error');
         return;
       }
       if (xhr.status === 201) {

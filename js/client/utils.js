@@ -43,7 +43,7 @@ export function getMeetingStatus(dateStr) {
 }
 
 export function formatDate(dateStr) {
-  if (!dateStr) return '—';
+  if (!dateStr) return '-';
   try {
     const [y, m, d] = dateStr.split('-').map(Number);
     return new Date(y, m - 1, d).toLocaleDateString('en-US', {

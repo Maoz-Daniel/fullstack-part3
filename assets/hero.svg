@@ -117,7 +117,7 @@
           stroke-dasharray="6 5" class="conn" style="animation-delay:-2.5s"/>
   </g>
 
-  <!-- ─── CARD 1 — Calendar view (top-left) ────────────────────────────── -->
+  <!-- ─── CARD 1 - Calendar view (top-left) ────────────────────────────── -->
   <g class="g1">
     <!-- Card body -->
     <rect x="80" y="80" width="260" height="180" rx="14"
@@ -168,7 +168,7 @@
           fill="none" stroke="#6366F1" stroke-width="1" stroke-opacity="0.25" filter="url(#cardGlow)"/>
   </g>
 
-  <!-- ─── CARD 2 — Meeting detail (top-right) ───────────────────────────── -->
+  <!-- ─── CARD 2 - Meeting detail (top-right) ───────────────────────────── -->
   <g class="g2">
     <rect x="460" y="60" width="270" height="170" rx="14"
           fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
@@ -196,7 +196,7 @@
           fill="none" stroke="#8B5CF6" stroke-width="1" stroke-opacity="0.3" filter="url(#cardGlow)"/>
   </g>
 
-  <!-- ─── CARD 3 — Invitation card (bottom-left) ───────────────────────── -->
+  <!-- ─── CARD 3 - Invitation card (bottom-left) ───────────────────────── -->
   <g class="g3">
     <rect x="120" y="300" width="220" height="155" rx="14"
           fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
@@ -222,7 +222,7 @@
           fill="none" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.2" filter="url(#cardGlow)"/>
   </g>
 
-  <!-- ─── CARD 4 — Stats row (bottom-right) ────────────────────────────── -->
+  <!-- ─── CARD 4 - Stats row (bottom-right) ────────────────────────────── -->
   <g class="g4">
     <rect x="430" y="270" width="310" height="195" rx="14"
           fill="url(#cardGrad)" stroke="#ffffff" stroke-width="0.6" stroke-opacity="0.09"/>
@@ -261,7 +261,7 @@
   </g>
 
   <!-- ─── Floating avatar badges ────────────────────────────────────────── -->
-  <!-- AV1 — bottom-left floating -->
+  <!-- AV1 - bottom-left floating -->
   <g class="g3" filter="url(#avatarGlow)">
     <circle cx="150" cy="415" r="22" fill="url(#av1)" opacity="0.9"/>
     <circle cx="150" cy="415" r="22" fill="none" stroke="#6366F1" stroke-width="1.5" stroke-opacity="0.5"/>
@@ -270,7 +270,7 @@
     <ellipse cx="150" cy="424" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
   </g>
 
-  <!-- AV2 — near card 1 top -->
+  <!-- AV2 - near card 1 top -->
   <g class="g1" filter="url(#avatarGlow)">
     <circle cx="296" cy="200" r="20" fill="url(#av2)" opacity="0.9"/>
     <circle cx="296" cy="200" r="20" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-opacity="0.5"/>
@@ -278,7 +278,7 @@
     <ellipse cx="296" cy="209" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
   </g>
 
-  <!-- AV3 — centre top -->
+  <!-- AV3 - centre top -->
   <g class="g2" filter="url(#avatarGlow)">
     <circle cx="508" cy="165" r="20" fill="url(#av3)" opacity="0.9"/>
     <circle cx="508" cy="165" r="20" fill="none" stroke="#06B6D4" stroke-width="1.5" stroke-opacity="0.5"/>
@@ -286,7 +286,7 @@
     <ellipse cx="508" cy="174" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
   </g>
 
-  <!-- AV4 — near card 2 -->
+  <!-- AV4 - near card 2 -->
   <g class="g4" filter="url(#avatarGlow)">
     <circle cx="668" cy="200" r="20" fill="url(#av4)" opacity="0.9"/>
     <circle cx="668" cy="200" r="20" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.5"/>
@@ -294,7 +294,7 @@
     <ellipse cx="668" cy="209" rx="9" ry="6" fill="#fff" fill-opacity="0.4"/>
   </g>
 
-  <!-- AV5 — centre-right mid -->
+  <!-- AV5 - centre-right mid -->
   <g class="g1" filter="url(#avatarGlow)">
     <circle cx="580" cy="370" r="20" fill="url(#av5)" opacity="0.9"/>
     <circle cx="580" cy="370" r="20" fill="none" stroke="#22C55E" stroke-width="1.5" stroke-opacity="0.5"/>

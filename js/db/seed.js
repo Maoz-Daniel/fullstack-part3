@@ -1,5 +1,5 @@
 /**
- * Seed Module — MeetSync Mock Data
+ * Seed Module - MeetSync Mock Data
  *
  * Populates localStorage with 3 demo users, ~10 meetings, and cross-user
  * invitations so the app is ready to demo immediately after a fresh load.

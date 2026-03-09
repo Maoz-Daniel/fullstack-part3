@@ -140,7 +140,7 @@ export function createInviteCard(inv) {
   statusBadge.classList.add(badgeClass);
 
   meetingTitleEl.textContent = inv.meeting?.title || 'Unknown meeting';
-  const meetingDate = inv.meeting ? formatDate(inv.meeting.date) : '—';
+  const meetingDate = inv.meeting ? formatDate(inv.meeting.date) : '-';
   const meetingTime = inv.meeting?.time     ? ` · ${inv.meeting.time}`     : '';
   const meetingLoc  = inv.meeting?.location ? ` · ${inv.meeting.location}` : '';
   meetingMetaEl.textContent = `${meetingDate}${meetingTime}${meetingLoc}`;

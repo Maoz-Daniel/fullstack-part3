@@ -1,4 +1,4 @@
-// Meetings — Fetch / Render / Stats 
+// Meetings - Fetch / Render / Stats 
 
 
 import { FXMLHttpRequest }                               from '../comm/fajax.js';
@@ -98,8 +98,8 @@ export function addMeetingCard(meeting) {
   if (status === 'today') dateChip.classList.add('chip-today');
   else if (status === 'past') dateChip.classList.add('chip-past');
 
-  clone.querySelector('.meeting-time-display').textContent     = meeting.time     || '—';
-  clone.querySelector('.meeting-location-display').textContent = meeting.location || '—';
+  clone.querySelector('.meeting-time-display').textContent     = meeting.time     || '-';
+  clone.querySelector('.meeting-location-display').textContent = meeting.location || '-';
 
   // Participants row
   const participantsEl = clone.querySelector('.meeting-participants');
@@ -197,7 +197,7 @@ export function addMeetingCard(meeting) {
           }, 200);
           showToast('Meeting deleted.', 'info');
         } else if (xhr.status === 0) {
-          showToast('Network error — could not delete. Please try again.', 'error');
+          showToast('Network error - could not delete. Please try again.', 'error');
           deleteBtn.disabled    = false;
           deleteBtn.textContent = 'Delete';
         } else {
